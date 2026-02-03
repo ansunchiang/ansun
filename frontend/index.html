@@ -13,26 +13,26 @@
             min-height: 100vh;
             line-height: 1.6;
         }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 16px; }
         
         /* 头部 */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-bottom: 1px solid #30363d;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             background: linear-gradient(135deg, #58a6ff, #8b949e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .lang-select {
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid #30363d;
             background: #21262d;
@@ -40,30 +40,22 @@
             cursor: pointer;
         }
         
-        /* AI助手 - 最上面 */
+        /* AI助手 */
         .ai-section {
             background: linear-gradient(145deg, #21262d, #161b22);
             border: 1px solid #30363d;
             border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
+            padding: 14px;
+            margin-bottom: 16px;
         }
-        .ai-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .ai-header h2 {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .ai-header h2 { font-size: 0.95rem; font-weight: 600; }
         .ai-chat {
             background: #0d1117;
             border-radius: 8px;
-            padding: 12px;
-            min-height: 100px;
-            max-height: 180px;
+            padding: 10px;
+            min-height: 80px;
+            max-height: 150px;
             overflow-y: auto;
             margin-bottom: 10px;
         }
@@ -77,7 +69,7 @@
             border-bottom-left-radius: 4px;
             font-size: 0.85rem;
             display: inline-block;
-            max-width: 90%;
+            max-width: 95%;
         }
         .ai-message.user .bubble {
             background: linear-gradient(135deg, #238636, #2ea043);
@@ -86,7 +78,7 @@
             border-bottom-right-radius: 4px;
             font-size: 0.85rem;
             display: inline-block;
-            max-width: 90%;
+            max-width: 95%;
             margin-left: auto;
         }
         .ai-input-group { display: flex; gap: 8px; }
@@ -97,11 +89,10 @@
             border: 1px solid #30363d;
             background: #0d1117;
             color: #c9d1d9;
-            font-size: 0.9rem;
         }
         .ai-input-group input:focus { outline: none; border-color: #58a6ff; }
         .ai-input-group button {
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             border: none;
             background: linear-gradient(135deg, #238636, #2ea043);
@@ -110,61 +101,71 @@
             cursor: pointer;
         }
         
+        /* 仪表盘快捷入口 */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .quick-stat {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-stat:hover { border-color: #58a6ff; background: #21262d; }
+        .quick-stat .icon { font-size: 1.5rem; margin-bottom: 6px; }
+        .quick-stat .label { font-size: 0.8rem; color: #8b949e; }
+        .quick-stat .value { font-size: 0.9rem; font-weight: 600; margin-top: 4px; }
+        .quick-stat .sub { font-size: 0.7rem; color: #f85149; }
+        
         /* 主内容区 */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 16px;
         }
         @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .quick-stats { grid-template-columns: repeat(2, 1fr); } }
         
         /* 卡片通用 */
         .section-card {
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 12px;
-            padding: 16px;
+            padding: 14px;
         }
         .section-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         
-        /* 行情头部 */
-        .market-header {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
+        /* 行情 */
+        .market-header { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
         .market-pill {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             background: #21262d;
-            border-radius: 8px;
+            border-radius: 6px;
         }
-        .market-pill .label { color: #8b949e; font-size: 0.8rem; }
-        .market-pill .value { font-weight: 600; font-size: 0.9rem; }
-        .market-pill .change { font-size: 0.8rem; font-weight: 500; padding: 2px 6px; border-radius: 4px; }
+        .market-pill .label { color: #8b949e; font-size: 0.75rem; }
+        .market-pill .value { font-weight: 600; font-size: 0.85rem; }
+        .market-pill .change { font-size: 0.75rem; font-weight: 500; padding: 2px 5px; border-radius: 4px; }
         .up { color: #3fb950; background: rgba(63, 185, 80, 0.2); }
         .down { color: #f85149; background: rgba(248, 81, 73, 0.2); }
         
-        /* 币种表格 */
         .coin-table { width: 100%; border-collapse: collapse; }
-        .coin-table th {
-            text-align: left;
-            padding: 8px;
-            color: #8b949e;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border-bottom: 1px solid #30363d;
-        }
+        .coin-table th { text-align: left; padding: 8px; color: #8b949e; font-size: 0.75rem; border-bottom: 1px solid #30363d; }
         .coin-table td { padding: 10px 8px; border-bottom: 1px solid #21262d; }
         .coin-table tr:hover td { background: #21262d; }
         .coin-info { display: flex; align-items: center; gap: 8px; }
@@ -176,20 +177,19 @@
         .coin-rank { color: #8b949e; font-size: 0.8rem; }
         
         /* 新闻 */
-        .news-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .news-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .search-box { display: flex; gap: 6px; }
         .search-box input {
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid #30363d;
             background: #21262d;
             color: #c9d1d9;
             font-size: 0.85rem;
-            width: 140px;
+            width: 120px;
         }
-        .search-box input:focus { outline: none; border-color: #58a6ff; }
         .search-box button {
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: none;
             background: #1f6feb;
@@ -221,22 +221,62 @@
             line-height: 1.4;
             margin-bottom: 4px;
         }
-        .news-card h4 a {
-            color: #c9d1d9;
-            text-decoration: none;
-        }
+        .news-card h4 a { color: #c9d1d9; text-decoration: none; }
         .news-card h4 a:hover { color: #58a6ff; }
-        .news-card p {
-            font-size: 0.8rem;
-            color: #8b949e;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .news-card p { font-size: 0.8rem; color: #8b949e; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        /* 解锁日历 */
+        .unlock-card {
+            background: #21262d;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .unlock-card img { width: 32px; height: 32px; border-radius: 50%; }
+        .unlock-card .info { flex: 1; }
+        .unlock-card .info .name { font-weight: 600; font-size: 0.85rem; }
+        .unlock-card .info .detail { font-size: 0.75rem; color: #8b949e; }
+        .unlock-card .unlock-badge {
+            background: rgba(248, 81, 73, 0.2);
+            color: #f85149;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
         
+        /* 热门叙事 */
+        .narrative-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .narrative-card {
+            background: #21262d;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .narrative-card:hover { background: #30363d; }
+        .narrative-card .n-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+        .narrative-card .n-icon { font-size: 1.2rem; }
+        .narrative-card .n-name { font-weight: 600; font-size: 0.85rem; }
+        .narrative-card .n-desc { font-size: 0.75rem; color: #8b949e; line-height: 1.4; }
+        .narrative-card .n-keywords { margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+        .narrative-card .n-keyword {
+            background: #161b22;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #58a6ff;
+        }
+        .n-trend { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
+        .trend-up { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
+        .trend-down { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+        .trend-stable { background: rgba(139, 148, 158, 0.2); color: #8b949e; }
+        
         /* 加载 */
-        .loading { text-align: center; padding: 20px; color: #8b949e; font-size: 0.85rem; }
+        .loading { text-align: center; padding: 16px; color: #8b949e; font-size: 0.85rem; }
         .loading::after {
             content: ''; display: inline-block; width: 16px; height: 16px;
             border: 2px solid #30363d; border-top-color: #58a6ff;
@@ -246,14 +286,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         /* 页脚 */
-        footer {
-            text-align: center;
-            padding: 20px;
-            border-top: 1px solid #30363d;
-            color: #8b949e;
-            font-size: 0.8rem;
-            margin-top: 20px;
-        }
+        footer { text-align: center; padding: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.8rem; margin-top: 16px; }
     </style>
 </head>
 <body>
@@ -266,7 +299,7 @@
             </select>
         </header>
         
-        <!-- AI助手 - 最上面 -->
+        <!-- AI助手 -->
         <div class="ai-section">
             <div class="ai-header">
                 <span>🤖</span>
@@ -283,41 +316,80 @@
             </div>
         </div>
         
-        <!-- 行情 + 资讯 -->
+        <!-- 快捷入口 -->
+        <div class="quick-stats" id="quickStats">
+            <div class="quick-stat" onclick="showSection('unlocks')">
+                <div class="icon">🔔</div>
+                <div class="label" id="unlockLabel">Token Unlocks</div>
+                <div class="value" id="unlockValue">Loading...</div>
+                <div class="sub" id="unlockSub">Upcoming</div>
+            </div>
+            <div class="quick-stat" onclick="showSection('events')">
+                <div class="icon">📅</div>
+                <div class="label" id="eventLabel">Key Events</div>
+                <div class="value" id="eventValue">Loading...</div>
+                <div class="sub" id="eventSub">This Week</div>
+            </div>
+            <div class="quick-stat" onclick="showSection('narratives')">
+                <div class="icon">🔥</div>
+                <div class="label" id="narrativeLabel">Hot Narratives</div>
+                <div class="value" id="narrativeValue">Loading...</div>
+                <div class="sub" id="narrativeSub">Trending</div>
+            </div>
+            <div class="quick-stat" onclick="showSection('summary')">
+                <div class="icon">📝</div>
+                <div class="label" id="summaryLabel">Daily Summary</div>
+                <div class="value" id="summaryValue">Loading...</div>
+                <div class="sub" id="summarySub">AI Generated</div>
+            </div>
+        </div>
+        
+        <!-- 主内容 -->
         <div class="main-grid">
-            <!-- 左侧：行情 -->
-            <div class="section-card">
-                <div class="section-title">📊 <span id="marketTitle">Live Market</span></div>
-                <div class="market-header" id="marketHeader">
-                    <div class="loading">Loading...</div>
+            <!-- 左侧：行情 + 解锁 -->
+            <div>
+                <div class="section-card" style="margin-bottom: 16px;">
+                    <div class="section-title">📊 <span id="marketTitle">Live Market</span></div>
+                    <div class="market-header" id="marketHeader">
+                        <div class="loading">Loading...</div>
+                    </div>
+                    <table class="coin-table">
+                        <thead>
+                            <tr><th>#</th><th>Coin</th><th>Price</th><th>24h</th><th>7d</th></tr>
+                        </thead>
+                        <tbody id="coinTable"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+                    </table>
                 </div>
-                <table class="coin-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Coin</th>
-                            <th>Price</th>
-                            <th>24h</th>
-                            <th>7d</th>
-                        </tr>
-                    </thead>
-                    <tbody id="coinTable">
-                        <tr><td colspan="5" class="loading">Loading...</td></tr>
-                    </tbody>
-                </table>
+                
+                <!-- 解锁日历 -->
+                <div class="section-card">
+                    <div class="section-title">🔔 <span id="unlocksTitle">Upcoming Unlocks</span></div>
+                    <div id="unlocksList"><div class="loading">Loading...</div></div>
+                </div>
             </div>
             
-            <!-- 右侧：资讯 -->
-            <div class="section-card">
-                <div class="news-header">
-                    <div class="section-title">📰 <span id="newsTitle">Latest News</span></div>
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Search...">
-                        <button onclick="searchNews()">🔍</button>
+            <!-- 右侧：热门叙事 + 新闻 -->
+            <div>
+                <!-- 热门叙事 -->
+                <div class="section-card" style="margin-bottom: 16px;">
+                    <div class="section-title">🔥 <span id="narrativesTitle">Hot Narratives</span></div>
+                    <div class="narrative-grid" id="narrativesList">
+                        <div class="loading">Loading...</div>
                     </div>
                 </div>
-                <div class="news-grid" id="newsContainer">
-                    <div class="loading">Loading...</div>
+                
+                <!-- 新闻 -->
+                <div class="section-card">
+                    <div class="news-header">
+                        <div class="section-title">📰 <span id="newsTitle">Latest News</span></div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search...">
+                            <button onclick="searchNews()">🔍</button>
+                        </div>
+                    </div>
+                    <div class="news-grid" id="newsContainer">
+                        <div class="loading">Loading...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -327,21 +399,32 @@
         </footer>
     </div>
     
-    <!-- Markdown -->
-<script src="marked.min.js"></script>
-<script>
+    <script src="marked.min.js"></script>
+    <script>
         const i18n = {
             en: {
                 marketTitle: "Live Market", newsTitle: "Latest News", aiTitle: "AI Assistant",
+                unlocksTitle: "Upcoming Unlocks", narrativesTitle: "Hot Narratives",
                 searchPlaceholder: "Search...", aiHello: "Hello! Ask me anything about crypto!",
-                askPlaceholder: "Ask a question...", sendBtn: "Send", footer: "© 2026 Ansun - Data from CoinGecko",
-                loading: "Loading...", noNews: "No news found"
+                askPlaceholder: "Ask a question...", sendBtn: "Send", footer: "© 2026 Ansun",
+                loading: "Loading...", noNews: "No news found",
+                unlockLabel: "Unlocks", unlockSub: "This Month",
+                eventLabel: "Events", eventSub: "This Week",
+                narrativeLabel: "Narratives", narrativeSub: "Trending",
+                summaryLabel: "Summary", summarySub: "AI Generated",
+                upcoming: "days", day: "day"
             },
             zh: {
                 marketTitle: "实时行情", newsTitle: "最新资讯", aiTitle: "AI智能助手",
+                unlocksTitle: "即将解锁", narrativesTitle: "热门概念",
                 searchPlaceholder: "搜索...", aiHello: "你好！有什么币圈问题可以问我～",
-                askPlaceholder: "输入问题...", sendBtn: "发送", footer: "© 2026 Ansun - 数据来源 CoinGecko",
-                loading: "加载中...", noNews: "暂无资讯"
+                askPlaceholder: "输入问题...", sendBtn: "发送", footer: "© 2026 Ansun",
+                loading: "加载中...", noNews: "暂无资讯",
+                unlockLabel: "代币解锁", unlockSub: "本月",
+                eventLabel: "重要事件", eventSub: "本周",
+                narrativeLabel: "热门概念", narrativeSub: "趋势",
+                summaryLabel: "每日摘要", summarySub: "AI生成",
+                upcoming: "天后", day: "天后"
             }
         };
 
@@ -353,6 +436,7 @@
             currentLang = browserLang.startsWith('zh') ? 'zh' : 'en';
             document.getElementById('langSelect').value = currentLang;
             applyLanguage();
+            loadDashboard();
             loadMarket();
             loadNews();
         }
@@ -362,16 +446,84 @@
             document.getElementById('marketTitle').textContent = t.marketTitle;
             document.getElementById('newsTitle').textContent = t.newsTitle;
             document.getElementById('aiTitle').textContent = t.aiTitle;
+            document.getElementById('unlocksTitle').textContent = t.unlocksTitle;
+            document.getElementById('narrativesTitle').textContent = t.narrativesTitle;
             document.getElementById('aiHello').textContent = t.aiHello;
             document.getElementById('aiInput').placeholder = t.askPlaceholder;
             document.getElementById('footerText').textContent = t.footer;
             document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            
+            document.getElementById('unlockLabel').textContent = t.unlockLabel;
+            document.getElementById('eventLabel').textContent = t.eventLabel;
+            document.getElementById('narrativeLabel').textContent = t.narrativeLabel;
+            document.getElementById('summaryLabel').textContent = t.summaryLabel;
+            document.getElementById('unlockSub').textContent = t.unlockSub;
+            document.getElementById('eventSub').textContent = t.eventSub;
+            document.getElementById('narrativeSub').textContent = t.narrativeSub;
+            document.getElementById('summarySub').textContent = t.summarySub;
         }
         
         function changeLanguage(lang) {
             currentLang = lang;
             applyLanguage();
+            loadDashboard();
             loadMarket();
+        }
+        
+        // 加载特色数据
+        async function loadDashboard() {
+            const t = i18n[currentLang];
+            try {
+                const res = await fetch(`${API_BASE}/features/dashboard`);
+                const data = await res.json();
+                if (data.success) {
+                    renderUnlocks(data.data.unlocks, t);
+                    renderNarratives(data.data.narratives, t);
+                    
+                    // 更新快捷入口数值
+                    document.getElementById('unlockValue').textContent = data.data.unlocks.length;
+                    document.getElementById('eventValue').textContent = data.data.events.length;
+                    document.getElementById('narrativeValue').textContent = data.data.narratives.length;
+                    document.getElementById('summaryValue').textContent = data.data.summary.summary ? 'Ready' : t.loading;
+                }
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
+        }
+        
+        function renderUnlocks(unlocks, t) {
+            const container = document.getElementById('unlocksList');
+            if (!unlocks.length) {
+                container.innerHTML = `<div class="loading">${t.loading}</div>`;
+                return;
+            }
+            container.innerHTML = unlocks.map(u => `
+                <div class="unlock-card">
+                    <img src="${u.image}" alt="${u.symbol}" onerror="this.style.display='none'">
+                    <div class="info">
+                        <div class="name">${u.name} (${u.symbol})</div>
+                        <div class="detail">${u.nextUnlock} · ${u.amount}</div>
+                    </div>
+                    <div class="unlock-badge">${u.daysUntil}${u.daysUntil > 1 ? t.upcoming : t.day}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderNarratives(narratives, t) {
+            const container = document.getElementById('narrativesList');
+            container.innerHTML = narratives.map(n => `
+                <div class="narrative-card">
+                    <div class="n-header">
+                        <span class="n-icon">${n.icon}</span>
+                        <span class="n-name">${n.name}</span>
+                        <span class="n-trend ${n.trend === 'up' ? 'trend-up' : n.trend === 'down' ? 'trend-down' : 'trend-stable'}">${n.trend}</span>
+                    </div>
+                    <div class="n-desc">${n.description}</div>
+                    <div class="n-keywords">
+                        ${n.keywords.slice(0, 3).map(k => `<span class="n-keyword">${k}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
         
         // 行情
@@ -403,38 +555,25 @@
                 </div>
             `;
             
-            document.getElementById('coinTable').innerHTML = coins.slice(0, 15).map(coin => `
+            document.getElementById('coinTable').innerHTML = coins.slice(0, 10).map(c => `
                 <tr>
-                    <td class="coin-rank">${coin.market_cap_rank || '-'}</td>
+                    <td class="coin-rank">${c.market_cap_rank || '-'}</td>
                     <td>
                         <div class="coin-info">
-                            <img src="${coin.image}" alt="${coin.name}" onerror="this.style.display='none'">
-                            <div>
-                                <div class="name">${coin.name}</div>
-                                <div class="symbol">${coin.symbol}</div>
-                            </div>
+                            <img src="${c.image}" alt="${c.name}" onerror="this.style.display='none'">
+                            <div><div class="name">${c.name}</div><div class="symbol">${c.symbol}</div></div>
                         </div>
                     </td>
-                    <td class="coin-price">${formatPrice(coin.current_price)}</td>
-                    <td><span class="coin-change ${getClass(coin.price_change_percentage_24h)}">${formatPercent(coin.price_change_percentage_24h)}</span></td>
-                    <td><span class="coin-change ${getClass(coin.price_change_percentage_7d)}">${formatPercent(coin.price_change_percentage_7d)}</span></td>
+                    <td class="coin-price">${formatPrice(c.current_price)}</td>
+                    <td><span class="coin-change ${getClass(c.price_change_percentage_24h)}">${formatPercent(c.price_change_percentage_24h)}</span></td>
+                    <td><span class="coin-change ${getClass(c.price_change_percentage_7d)}">${formatPercent(c.price_change_percentage_7d)}</span></td>
                 </tr>
             `).join('');
         }
         
-        function formatPrice(price) {
-            if (!price) return '-';
-            if (price >= 1) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            if (price >= 0.01) return '$' + price.toFixed(4);
-            return '$' + price.toFixed(6);
-        }
-        
-        function formatPercent(pct) {
-            if (pct === undefined || pct === null) return '-';
-            return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
-        }
-        
-        function getClass(pct) { return (!pct || pct >= 0) ? 'up' : 'down'; }
+        function formatPrice(p) { if (!p) return '-'; if (p >= 1) return '$' + p.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); if (p >= 0.01) return '$' + p.toFixed(4); return '$' + p.toFixed(6); }
+        function formatPercent(p) { if (p === undefined || p === null) return '-'; return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
+        function getClass(p) { return (!p || p >= 0) ? 'up' : 'down'; }
         
         // 新闻
         async function loadNews() {
@@ -442,7 +581,7 @@
             const container = document.getElementById('newsContainer');
             container.innerHTML = `<div class="loading">${t.loading}</div>`;
             try {
-                const res = await fetch(`${API_BASE}/news/en?limit=10`);
+                const res = await fetch(`${API_BASE}/news/en?limit=8`);
                 const data = await res.json();
                 if (data.success) renderNews(data.data, t);
             } catch (e) { container.innerHTML = `<div class="loading">${t.noNews}</div>`; }
@@ -479,34 +618,26 @@
         // AI
         async function askAI() {
             const input = document.getElementById('aiInput');
-            const question = input.value.trim();
-            if (!question) return;
+            const q = input.value.trim();
+            if (!q) return;
             const chat = document.getElementById('aiChat');
             const t = i18n[currentLang];
-            chat.innerHTML += `<div class="ai-message user"><div class="bubble">${question}</div></div>`;
+            chat.innerHTML += `<div class="ai-message user"><div class="bubble">${q}</div></div>`;
             chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${t.loading}</div></div>`;
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
             try {
-                const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, lang: currentLang }) });
+                const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q, lang: currentLang }) });
                 const data = await res.json();
                 chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, '');
                 chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${data.success ? marked.parse(data.answer) : 'Error'}</div></div>`;
-            } catch (e) { 
-                chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, '');
-                chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">Error</div></div>`; 
-            }
+            } catch (e) { chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, ''); chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">Error</div></div>`; }
             chat.scrollTop = chat.scrollHeight;
         }
         
-        function formatTime(ts) {
-            const diff = (Date.now() - ts) / 1000 / 60;
-            if (diff < 60) return Math.floor(diff) + 'm ago';
-            if (diff < 1440) return Math.floor(diff / 60) + 'h ago';
-            return Math.floor(diff / 1440) + 'd ago';
-        }
-        
-        function stripHtml(html) { return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(); }
+        function formatTime(ts) { const d = (Date.now() - ts) / 1000 / 60; if (d < 60) return Math.floor(d) + 'm ago'; if (d < 1440) return Math.floor(d / 60) + 'h ago'; return Math.floor(d / 1440) + 'd ago'; }
+        function stripHtml(h) { return h.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(); }
+        function showSection(id) { console.log('Show section:', id); }
         
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchNews(); });
         document.getElementById('aiInput').addEventListener('keypress', e => { if (e.key === 'Enter') askAI(); });

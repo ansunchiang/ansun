@@ -11,6 +11,7 @@ require('dotenv').config();
 const newsRoutes = require('./routes/news');
 const aiRoutes = require('./routes/ai');
 const priceRoutes = require('./routes/price');
+const featuresRoutes = require('./routes/features');
 const { startCacheScheduler, getCacheStatus } = require('./services/news');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.use('/api/news', newsRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/price', priceRoutes);
+app.use('/api/features', featuresRoutes);
 
 // 健康检查 + 缓存状态
 app.get('/api/health', (req, res) => {
