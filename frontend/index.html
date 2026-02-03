@@ -7,41 +7,304 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #fff; min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            min-height: 100vh;
+            line-height: 1.6;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { text-align: center; padding: 40px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
-        header h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(90deg, #00d4ff, #7b2cbf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        header p { color: rgba(255,255,255,0.7); }
-        .lang-switch { position: absolute; top: 20px; right: 20px; }
-        .lang-switch select { padding: 8px 15px; border-radius: 20px; border: none; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; }
-        .lang-switch select option { background: #1a1a2e; }
-        .search-box { display: flex; gap: 10px; max-width: 600px; margin: 30px auto; }
-        .search-box input { flex: 1; padding: 15px 20px; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1rem; }
-        .search-box input:focus { outline: none; background: rgba(255,255,255,0.15); }
-        .search-box button { padding: 15px 30px; border: none; border-radius: 10px; background: linear-gradient(90deg, #00d4ff, #7b2cbf); color: #fff; cursor: pointer; }
-        .tabs { display: flex; gap: 10px; margin: 30px 0; flex-wrap: wrap; justify-content: center; }
-        .tab { padding: 10px 20px; border: none; border-radius: 20px; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; }
-        .tab:hover, .tab.active { background: linear-gradient(90deg, #00d4ff, #7b2cbf); }
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 30px; }
-        .news-card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-        .news-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
-        .news-card h3 { font-size: 1.1rem; margin-bottom: 10px; line-height: 1.4; }
-        .news-card h3 a { color: #fff; text-decoration: none; }
-        .news-card h3 a:hover { color: #00d4ff; }
-        .news-meta { display: flex; gap: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 10px; flex-wrap: wrap; }
-        .news-source { background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; }
-        .ai-section { margin-bottom: 50px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; }
-        .ai-chat { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; }
-        .ai-chat .user { align-self: flex-end; background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 15px 20px; border-radius: 20px; max-width: 80%; }
-        .ai-chat .assistant { align-self: flex-start; background: rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 20px; max-width: 80%; }
-        .loading { text-align: center; padding: 40px; color: rgba(255,255,255,0.5); }
-        footer { text-align: center; padding: 40px; color: rgba(255,255,255,0.3); font-size: 0.9rem; }
-        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60%, 100% { content: '...'; } }
-        .loading::after { content: ''; animation: dots 1.5s infinite; }
-        @media (max-width: 768px) { .news-grid { grid-template-columns: 1fr; } header h1 { font-size: 2rem; } .lang-switch { position: static; margin-bottom: 20px; } }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+        
+        /* 头部 */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid #30363d;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #58a6ff, #8b949e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        header p { color: #8b949e; font-size: 1rem; }
+        
+        /* 语言切换 */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .lang-switch select {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #21262d;
+            color: #c9d1d9;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .lang-switch select:hover { border-color: #58a6ff; }
+        
+        /* AI助手卡片 */
+        .ai-card {
+            background: linear-gradient(145deg, #21262d, #161b22);
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .ai-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #238636, #2ea043);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .ai-title h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #c9d1d9;
+        }
+        .ai-title p { font-size: 0.85rem; color: #8b949e; }
+        
+        /* AI聊天区 */
+        .ai-chat {
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+        .ai-message {
+            margin-bottom: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ai-message.user { text-align: right; }
+        .ai-message .bubble {
+            display: inline-block;
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .ai-message.assistant .bubble {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-bottom-left-radius: 4px;
+            color: #c9d1d9;
+            text-align: left;
+        }
+        .ai-message.user .bubble {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            border-bottom-right-radius: 4px;
+            color: #fff;
+        }
+        
+        /* 输入框 */
+        .ai-input-group {
+            display: flex;
+            gap: 12px;
+        }
+        .ai-input-group input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-size: 0.95rem;
+        }
+        .ai-input-group input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+        }
+        .ai-input-group button {
+            padding: 14px 28px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #238636, #2ea043);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ai-input-group button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(46, 160, 67, 0.3); }
+        
+        /* 搜索框 */
+        .search-section {
+            margin-bottom: 32px;
+        }
+        .search-box {
+            display: flex;
+            gap: 12px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 6px;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 14px 18px;
+            border: none;
+            background: transparent;
+            color: #c9d1d9;
+            font-size: 1rem;
+        }
+        .search-box input:focus { outline: none; }
+        .search-box button {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #1f6feb, #388bfd);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .search-box button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3); }
+        
+        /* 标签页 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #21262d;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .tab:hover { border-color: #58a6ff; color: #58a6ff; }
+        .tab.active {
+            background: #1f6feb;
+            border-color: #1f6feb;
+            color: #fff;
+        }
+        
+        /* 新闻卡片 */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .news-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .news-card:hover {
+            transform: translateY(-4px);
+            border-color: #58a6ff;
+            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.1);
+        }
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .news-source {
+            background: linear-gradient(135deg, #238636, #2ea043);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .news-time {
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+        .news-card h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .news-card h3 a {
+            color: #c9d1d9;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .news-card h3 a:hover { color: #58a6ff; }
+        .news-card p {
+            font-size: 0.9rem;
+            color: #8b949e;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b949e;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #30363d;
+            border-top-color: #58a6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 32px 20px;
+            border-top: 1px solid #30363d;
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .news-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.8rem; }
+            .lang-switch { position: static; margin-bottom: 16px; text-align: center; }
+            header { padding-top: 20px; }
+            .ai-chat { min-height: 150px; }
+        }
     </style>
 </head>
 <body>
@@ -58,37 +321,46 @@
                     <option value="fr">🇫🇷 Français</option>
                 </select>
             </div>
-            <h1 id="pageTitle">Ansun 🚀</h1>
+            <h1 id="pageTitle">Ansun</h1>
             <p id="pageSubtitle">Crypto News AI Aggregator</p>
         </header>
         
-        <!-- AI助手板块 - 放在最上面 -->
-        <div class="ai-section">
-            <h2 id="aiTitle">🤖 AI Assistant</h2>
-            <p id="aiSubtitle" style="color: rgba(255,255,255,0.6); margin-bottom: 20px;">Crypto knowledge Q&A only</p>
-            <div class="ai-chat" id="aiChat">
-                <div class="assistant" id="aiHello">Hello! Ask me anything about crypto!</div>
+        <!-- AI助手 -->
+        <div class="ai-card">
+            <div class="ai-header">
+                <div class="ai-icon">🤖</div>
+                <div class="ai-title">
+                    <h2 id="aiTitle">AI Assistant</h2>
+                    <p id="aiSubtitle">Crypto knowledge Q&A only</p>
+                </div>
             </div>
-            <div class="search-box" style="margin-top: 20px;">
-                <input type="text" id="aiInput" placeholder="Ask your question...">
+            <div class="ai-chat" id="aiChat">
+                <div class="ai-message assistant">
+                    <div class="bubble" id="aiHello">Hello! Ask me anything about crypto!</div>
+                </div>
+            </div>
+            <div class="ai-input-group">
+                <input type="text" id="aiInput" placeholder="Ask your question..." onkeypress="if(event.key==='Enter')askAI()">
                 <button id="askBtn" onclick="askAI()">Ask</button>
             </div>
         </div>
         
-        <!-- 搜索框 -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search crypto news...">
-            <button id="searchBtn" onclick="searchNews()">Search</button>
+        <!-- 搜索 -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search crypto news..." onkeypress="if(event.key==='Enter')searchNews()">
+                <button id="searchBtn" onclick="searchNews()">Search</button>
+            </div>
         </div>
         
-        <!-- 新闻分类 -->
+        <!-- 分类 -->
         <div class="tabs">
             <button class="tab active" onclick="showCategory('all')" id="tabAll">All</button>
             <button class="tab" onclick="showCategory('news')" id="tabNews">News</button>
-            <button class="tab" onclick="refreshNews()" id="tabRefresh">🔄</button>
+            <button class="tab" onclick="refreshNews()" id="tabRefresh">🔄 Refresh</button>
         </div>
         
-        <!-- 新闻列表 -->
+        <!-- 新闻 -->
         <div id="newsContainer" class="news-grid">
             <div class="loading" id="loadingText">Loading...</div>
         </div>
@@ -97,13 +369,14 @@
             <p id="footerCopyright">© 2026 Ansun</p>
         </footer>
     </div>
+    
     <script>
         const i18n = {
             en: {
-                title: "Ansun 🚀", subtitle: "Crypto News AI Aggregator",
+                title: "Ansun", subtitle: "Crypto News AI Aggregator",
                 searchPlaceholder: "Search crypto news...", searchBtn: "Search",
                 tabs: { all: "All", news: "News", refresh: "🔄 Refresh" },
-                aiTitle: "🤖 AI Assistant", aiSubtitle: "Crypto knowledge Q&A only",
+                aiTitle: "AI Assistant", aiSubtitle: "Crypto knowledge Q&A only",
                 aiHello: "Hello! Ask me anything about crypto!",
                 askPlaceholder: "Ask your question...", askBtn: "Ask",
                 copyright: "© 2026 Ansun",
@@ -111,10 +384,10 @@
                 apiLang: "en"
             },
             zh: {
-                title: "Ansun 🚀", subtitle: "币圈资讯AI聚合平台",
+                title: "Ansun", subtitle: "币圈资讯AI聚合平台",
                 searchPlaceholder: "搜索币圈新闻...", searchBtn: "搜索",
                 tabs: { all: "全部", news: "新闻", refresh: "🔄 刷新" },
-                aiTitle: "🤖 AI智能助手", aiSubtitle: "只回答币圈知识问题",
+                aiTitle: "AI智能助手", aiSubtitle: "只回答币圈知识问题",
                 aiHello: "你好！有什么币圈问题可以问我～",
                 askPlaceholder: "输入问题...", askBtn: "提问",
                 copyright: "© 2026 Ansun",
@@ -122,10 +395,10 @@
                 apiLang: "zh"
             },
             ja: {
-                title: "Ansun 🚀", subtitle: "クリプトニュースAI",
+                title: "Ansun", subtitle: "クリプトニュースAI",
                 searchPlaceholder: "クリプトニュースを検索...", searchBtn: "検索",
                 tabs: { all: "すべて", news: "ニュース", refresh: "🔄 更新" },
-                aiTitle: "🤖 AIアシスタント", aiSubtitle: "クリプト知識のみ",
+                aiTitle: "AIアシスタント", aiSubtitle: "クリプト知識のみ",
                 aiHello: "こんにちは！クリプトの質問があれば聞いてください！",
                 askPlaceholder: "質問を入力...", askBtn: "質問",
                 copyright: "© 2026 Ansun",
@@ -133,10 +406,10 @@
                 apiLang: "zh"
             },
             ko: {
-                title: "Ansun 🚀", subtitle: "암호화폐 뉴스 AI",
+                title: "Ansun", subtitle: "암호화폐 뉴스 AI",
                 searchPlaceholder: "암호화폐 뉴스 검색...", searchBtn: "검색",
                 tabs: { all: "전체", news: "뉴스", refresh: "🔄 새로고침" },
-                aiTitle: "🤖 AI 어시스턴트", aiSubtitle: "암호화폐 지식만",
+                aiTitle: "AI 어시스턴트", aiSubtitle: "암호화폐 지식만",
                 aiHello: "안녕하세요！암호화폐 질문이 있으시면 말씀해주세요！",
                 askPlaceholder: "질문을 입력하세요...", askBtn: "질문",
                 copyright: "© 2026 Ansun",
@@ -144,10 +417,10 @@
                 apiLang: "zh"
             },
             pt: {
-                title: "Ansun 🚀", subtitle: "Notícias de Criptomoedas",
+                title: "Ansun", subtitle: "Notícias de Criptomoedas",
                 searchPlaceholder: "Pesquisar...", searchBtn: "Pesquisar",
                 tabs: { all: "Todos", news: "Notícias", refresh: "🔄 Atualizar" },
-                aiTitle: "🤖 Assistente IA", aiSubtitle: "Perguntas sobre crypto",
+                aiTitle: "Assistente IA", aiSubtitle: "Perguntas sobre crypto",
                 aiHello: "Olá! Pergunte sobre crypto!",
                 askPlaceholder: "Digite sua pergunta...", askBtn: "Perguntar",
                 copyright: "© 2026 Ansun",
@@ -155,10 +428,10 @@
                 apiLang: "en"
             },
             es: {
-                title: "Ansun 🚀", subtitle: "Noticias de Criptomonedas",
+                title: "Ansun", subtitle: "Noticias de Criptomonedas",
                 searchPlaceholder: "Buscar...", searchBtn: "Buscar",
                 tabs: { all: "Todos", news: "Noticias", refresh: "🔄 Actualizar" },
-                aiTitle: "🤖 Asistente IA", aiSubtitle: "Preguntas sobre crypto",
+                aiTitle: "Asistente IA", aiSubtitle: "Preguntas sobre crypto",
                 aiHello: "¡Hola! Pregunte sobre crypto!",
                 askPlaceholder: "Ingresa tu pregunta...", askBtn: "Preguntar",
                 copyright: "© 2026 Ansun",
@@ -166,10 +439,10 @@
                 apiLang: "en"
             },
             fr: {
-                title: "Ansun 🚀", subtitle: "Actualités Crypto",
+                title: "Ansun", subtitle: "Actualités Crypto",
                 searchPlaceholder: "Rechercher...", searchBtn: "Rechercher",
                 tabs: { all: "Tout", news: "Actualités", refresh: "🔄 Actualiser" },
-                aiTitle: "🤖 Assistant IA", aiSubtitle: "Questions sur crypto",
+                aiTitle: "Assistant IA", aiSubtitle: "Questions sur crypto",
                 aiHello: "Bonjour! Posez des questions sur crypto!",
                 askPlaceholder: "Entrez votre question...", askBtn: "Poser",
                 copyright: "© 2026 Ansun",
@@ -237,10 +510,10 @@
                 <div class="news-card">
                     <div class="news-meta">
                         <span class="news-source">${item.source}</span>
-                        <span>${formatTime(item.timestamp)}</span>
+                        <span class="news-time">${formatTime(item.timestamp)}</span>
                     </div>
                     <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.5;">${stripHtml(item.content).slice(0, 150)}...</p>
+                    <p>${stripHtml(item.content).slice(0, 120)}...</p>
                 </div>`).join('');
         }
 
@@ -271,8 +544,8 @@
             if (!question) return;
             const chat = document.getElementById('aiChat');
             const t = i18n[currentLang];
-            chat.innerHTML += `<div class="user">${question}</div>`;
-            chat.innerHTML += `<div class="loading">${t.thinking}</div>`;
+            chat.innerHTML += `<div class="ai-message user"><div class="bubble">${question}</div></div>`;
+            chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${t.thinking}</div></div>`;
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
             try {
@@ -282,11 +555,11 @@
                     body: JSON.stringify({ question, lang: currentLang }) 
                 });
                 const data = await res.json();
-                chat.innerHTML = chat.innerHTML.replace(`<div class="loading">${t.thinking}</div>`, '');
-                chat.innerHTML += `<div class="assistant">${data.success ? data.answer : t.error}</div>`;
+                chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Thinking...<\/div>$/, '');
+                chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${data.success ? data.answer : t.error}</div></div>`;
             } catch (error) { 
-                chat.innerHTML = chat.innerHTML.replace(`<div class="loading">${t.thinking}</div>`, ''); 
-                chat.innerHTML += `<div class="assistant">${t.error}</div>`; 
+                chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Thinking...<\/div>$/, ''); 
+                chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${t.error}</div></div>`; 
             }
             chat.scrollTop = chat.scrollHeight;
         }
@@ -302,8 +575,6 @@
 
         function stripHtml(html) { return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(); }
 
-        document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchNews(); });
-        document.getElementById('aiInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') askAI(); });
         initLanguage();
         loadNews();
     </script>
