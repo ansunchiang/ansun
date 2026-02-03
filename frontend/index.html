@@ -327,7 +327,9 @@
         </footer>
     </div>
     
-    <script>
+    <!-- Markdown -->
+<script src="marked.min.js"></script>
+<script>
         const i18n = {
             en: {
                 marketTitle: "Live Market", newsTitle: "Latest News", aiTitle: "AI Assistant",
@@ -489,7 +491,7 @@
                 const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, lang: currentLang }) });
                 const data = await res.json();
                 chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, '');
-                chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${data.success ? data.answer : 'Error'}</div></div>`;
+                chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${data.success ? marked.parse(data.answer) : 'Error'}</div></div>`;
             } catch (e) { 
                 chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, '');
                 chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">Error</div></div>`; 
