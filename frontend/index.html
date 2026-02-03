@@ -569,10 +569,10 @@
             } else {
                 const m = whaleCache.onchain_metrics || {};
                 container.innerHTML = `
-                    <div class="metric-row"><span class="label">Active Addresses</span><span class="value">${parseInt(m.active_addresses || 0).toLocaleString()}</span></div>
-                    <div class="metric-row"><span class="label">Transactions</span><span class="value">${parseInt(m.transaction_count || 0).toLocaleString()}</span></div>
+                    <div class="metric-row"><span class="label">Active Addresses</span><span class="value">${parseInt(m.activeAddresses || 0).toLocaleString()}</span></div>
+                    <div class="metric-row"><span class="label">Transactions</span><span class="value">${parseInt(m.transactionCount || 0).toLocaleString()}</span></div>
                     <div class="metric-row"><span class="label">DeFi TVL</span><span class="value">${m.defi_tvl || '-'}</span></div>
-                    <div class="metric-row"><span class="label">NFT 24h Volume</span><span class="value">$${parseInt(m.nft_volume || 0).toLocaleString()}</span></div>`;
+                    <div class="metric-row"><span class="label">NFT 24h Volume</span><span class="value">$${parseInt(m.nftVolume || 0).toLocaleString()}</span></div>`;
             }
         }
         

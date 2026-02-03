@@ -154,14 +154,14 @@ async function getExchangeFlows() {
   
   const flows = {
     btc: {
-      inflow_24h: (Math.random() * 50000 + 20000).toFixed(0),
-      outflow_24h: (Math.random() * 40000 + 15000).toFixed(0),
+      inflow24h: (Math.random() * 50000 + 20000).toFixed(0),
+      outflow24h: (Math.random() * 40000 + 15000).toFixed(0),
       net_flow: (Math.random() * 20000 - 10000).toFixed(0),
       trend: Math.random() > 0.5 ? 'outflow' : 'inflow'
     },
     eth: {
-      inflow_24h: (Math.random() * 300000 + 100000).toFixed(0),
-      outflow_24h: (Math.random() * 250000 + 80000).toFixed(0),
+      inflow24h: (Math.random() * 300000 + 100000).toFixed(0),
+      outflow24h: (Math.random() * 250000 + 80000).toFixed(0),
       net_flow: (Math.random() * 100000 - 50000).toFixed(0),
       trend: Math.random() > 0.5 ? 'outflow' : 'inflow'
     }
@@ -182,10 +182,10 @@ async function getOnchainMetrics() {
   const metrics = {
     active_addresses: (Math.random() * 500000 + 800000).toFixed(0),
     transaction_count: (Math.random() * 3000000 + 4000000).toFixed(0),
-    exchange_ inflow: (Math.random() * 100000 + 50000).toFixed(0),
-    exchange_outflow: (Math.random() * 80000 + 40000).toFixed(0),
+    exchangeInflow: (Math.random() * 100000 + 50000).toFixed(0),
+    exchangeOutflow: (Math.random() * 80000 + 40000).toFixed(0),
     miner_inflow: (Math.random() * 5000 + 2000).toFixed(0),
-    nft_volume: (Math.random() * 20000000 + 10000000).toFixed(0),
+    nftVolume: (Math.random() * 20000000 + 10000000).toFixed(0),
     defi_tvl: (Math.random() * 50 + 80).toFixed(1) + 'B',
     last_updated: new Date().toISOString()
   };
