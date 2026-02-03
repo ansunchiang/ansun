@@ -512,7 +512,7 @@
                         <span class="news-source">${item.source}</span>
                         <span class="news-time">${formatTime(item.timestamp)}</span>
                     </div>
-                    <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                    <h3><a href="/article.html?id=${encodeURIComponent(item.link)}" onclick="viewArticle(event, this.href)">${item.title}</a></h3>
                     <p>${stripHtml(item.content).slice(0, 120)}...</p>
                 </div>`).join('');
         }
@@ -563,6 +563,11 @@
             }
             chat.scrollTop = chat.scrollHeight;
         }
+
+        function viewArticle(e, url) {
+    e.preventDefault();
+    window.location.href = url + '&lang=' + currentLang;
+}
 
         function formatTime(timestamp) {
             const date = new Date(timestamp);
