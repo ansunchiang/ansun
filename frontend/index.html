@@ -274,7 +274,7 @@
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
             try {
-                const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question }) });
+                const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, lang: currentLang }) });
                 const data = await res.json();
                 chat.innerHTML = chat.innerHTML.replace(`<div class="loading">${t.thinking}</div>`, '');
                 chat.innerHTML += `<div class="assistant">${data.success ? data.answer : t.error}</div>`;
