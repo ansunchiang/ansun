@@ -53,11 +53,27 @@ router.get('/coin/:symbol', async (req, res) => {
     const { symbol } = req.params;
     const upperSymbol = symbol.toUpperCase();
     
+    // 代币名称映射
+    const coinKeywords = {
+      'BTC': ['bitcoin', 'btc', '₿'],
+      'ETH': ['ethereum', 'eth', 'ether'],
+      'SOL': ['solana', 'sol'],
+      'BNB': ['binance coin', 'bnb', 'binance coin'],
+      'XRP': ['ripple', 'xrp'],
+      'ADA': ['cardano', 'ada'],
+      'DOGE': ['dogecoin', 'doge', 'doge'],
+      'AVAX': ['avalanche', 'avax'],
+      'MATIC': ['polygon', 'matic'],
+      'LINK': ['chainlink', 'link']
+    };
+    
+    const keywords = coinKeywords[upperSymbol] || [upperSymbol.toLowerCase()];
+    
     // 获取相关新闻
     const newsData = getCachedNews('en') || [];
     const coinNews = newsData.filter(n => {
       const text = (n.title + ' ' + n.content).toLowerCase();
-      return text.includes(upperSymbol.toLowerCase());
+      return keywords.some(k => text.includes(k));
     }).slice(0, 20);
     
     // 模拟代币巨鲸活动
