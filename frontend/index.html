@@ -141,53 +141,63 @@
             padding: 16px;
             margin-bottom: 16px;
         }
-        .signal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .signal-badge {
+        .signal-main {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.9rem;
+            gap: 16px;
+            margin-bottom: 14px;
         }
-        .signal-buy { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
-        .signal-sell { background: rgba(248, 81, 73, 0.2); color: #f85149; }
-        .signal-hold { background: rgba(139, 148, 158, 0.2); color: #8b949e; }
-        .signal-neutral { background: rgba(88, 166, 255, 0.2); color: #58a6ff; }
-        .confidence-bar {
-            height: 6px;
+        .signal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .signal-buy .signal-icon { background: rgba(63, 185, 80, 0.2); }
+        .signal-sell .signal-icon { background: rgba(248, 81, 73, 0.2); }
+        .signal-hold .signal-icon { background: rgba(139, 148, 158, 0.2); }
+        .signal-info { flex: 1; }
+        .signal-title { font-size: 0.85rem; color: #8b949e; margin-bottom: 4px; }
+        .signal-recommendation { font-size: 1.4rem; font-weight: 700; }
+        .signal-buy .signal-recommendation { color: #3fb950; }
+        .signal-sell .signal-recommendation { color: #f85149; }
+        .signal-hold .signal-recommendation { color: #8b949e; }
+        .signal-desc { font-size: 0.8rem; color: #8b949e; margin-top: 2px; }
+        .confidence-simple {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
             background: #21262d;
-            border-radius: 3px;
-            margin: 10px 0;
-            overflow: hidden;
         }
-        .confidence-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        .confidence-fill.high { background: linear-gradient(90deg, #238636, #3fb950); }
-        .confidence-fill.medium { background: linear-gradient(90deg, #d29922, #f0c14b); }
-        .confidence-fill.low { background: linear-gradient(90deg, #f85149, #da3633); }
-        .signal-analysis {
+        .confidence-simple span { font-weight: 600; }
+        .confidence-simple.high { color: #3fb950; }
+        .confidence-simple.medium { color: #f0c14b; }
+        .confidence-simple.low { color: #f85149; }
+        .signal-detail {
             background: #0d1117;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .detail-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 0.85rem; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .label { color: #8b949e; }
+        .detail-row .value { font-weight: 600; }
+        .detail-row .value.up { color: #3fb950; }
+        .detail-row .value.down { color: #f85149; }
+        .why-box {
+            background: #21262d;
             border-radius: 8px;
             padding: 12px;
             font-size: 0.85rem;
             line-height: 1.6;
-            color: #c9d1d9;
         }
-        .signal-factors { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
-        .factor-card {
-            background: #21262d;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        .factor-title { font-size: 0.75rem; color: #8b949e; margin-bottom: 4px; }
-        .factor-value { font-size: 0.85rem; font-weight: 600; }
-        .factor-value.up { color: #3fb950; }
-        .factor-value.down { color: #f85149; }
+        .why-title { font-weight: 600; margin-bottom: 8px; color: #58a6ff; }
+        .why-item { margin-bottom: 6px; padding-left: 16px; position: relative; }
+        .why-item::before { content: '•'; position: absolute; left: 0; color: #58a6ff; }
         .signal-timestamp { font-size: 0.75rem; color: #8b949e; margin-top: 10px; text-align: right; }
         
         @media (max-width: 600px) { .signal-factors { grid-template-columns: 1fr; } }
@@ -390,38 +400,43 @@
         
         <!-- AI Signal Section -->
         <div class="signal-card" id="signal-section">
-            <div class="signal-header">
-                <div class="section-title">📈 <span id="signalTitle">AI Market Signal</span></div>
-                <div class="signal-badge" id="signalBadge">
-                    <span id="signalEmoji">⚖️</span>
-                    <span id="signalText">Calculating...</span>
+            <div class="section-title">📈 <span id="signalTitle">AI 市场信号</span></div>
+            <div class="signal-main" id="signalMain">
+                <div class="signal-icon">🤖</div>
+                <div class="signal-info">
+                    <div class="signal-title">AI 综合判断</div>
+                    <div class="signal-recommendation" id="signalRec">分析中...</div>
+                    <div class="signal-desc" id="signalDesc">正在读取数据...</div>
+                </div>
+                <div class="confidence-simple" id="confSimple">
+                    置信度: <span>-</span>
                 </div>
             </div>
-            <div class="confidence-bar">
-                <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
-            </div>
-            <div class="signal-analysis" id="signalAnalysis">
-                Loading AI analysis...
-            </div>
-            <div class="signal-factors">
-                <div class="factor-card">
-                    <div class="factor-title">🐋 Whale Activity</div>
-                    <div class="factor-value" id="whaleFactor">-</div>
+            <div class="signal-detail" id="signalDetail">
+                <div class="detail-row">
+                    <span class="label">🐋 巨鲸资金</span>
+                    <span class="value" id="whaleNet">-</span>
                 </div>
-                <div class="factor-card">
-                    <div class="factor-title">📰 Sentiment</div>
-                    <div class="factor-value" id="sentimentFactor">-</div>
+                <div class="detail-row">
+                    <span class="label">📰 新闻情绪</span>
+                    <span class="value" id="sentimentVal">-</span>
                 </div>
             </div>
-            <div class="signal-timestamp" id="signalTimestamp">Last updated: -</div>
+            <div class="why-box">
+                <div class="why-title">💡 为什么是这个判断？</div>
+                <div id="signalWhy">
+                    正在分析市场数据...
+                </div>
+            </div>
+            <div class="signal-timestamp" id="signalTimestamp">最后更新: -</div>
         </div>
         
         <div class="quick-stats">
             <div class="quick-stat" onclick="scrollToSection('signal-section')">
                 <div class="icon">📈</div>
-                <div class="label">AI Signal</div>
+                <div class="label">AI 信号</div>
                 <div class="value" id="signalValue">-</div>
-                <div class="sub">Analysis</div>
+                <div class="sub">买卖建议</div>
             </div>
             <div class="quick-stat" onclick="scrollToSection('unlocks-section')">
                 <div class="icon">🔔</div>
@@ -560,45 +575,84 @@
         }
         
         function renderSignal(signal, t) {
-            const badge = document.getElementById('signalBadge');
-            const emoji = document.getElementById('signalEmoji');
-            const text = document.getElementById('signalText');
-            const analysis = document.getElementById('signalAnalysis');
-            const confidenceFill = document.getElementById('confidenceFill');
-            const whaleFactor = document.getElementById('whaleFactor');
-            const sentimentFactor = document.getElementById('sentimentFactor');
+            const main = document.getElementById('signalMain');
+            const rec = document.getElementById('signalRec');
+            const desc = document.getElementById('signalDesc');
+            const confEl = document.getElementById('confSimple');
+            const whaleNet = document.getElementById('whaleNet');
+            const sentimentVal = document.getElementById('sentimentVal');
+            const why = document.getElementById('signalWhy');
             const timestamp = document.getElementById('signalTimestamp');
             
-            // 设置信号徽章
+            // 映射信号到样式和文本
             const signalMap = {
-                'bullish': { class: 'signal-buy', emoji: '🟢', text: t.buy },
-                'bearish': { class: 'signal-sell', emoji: '🔴', text: t.sell },
-                'neutral': { class: 'signal-neutral', emoji: '⚪', text: t.neutral }
+                'bullish': { 
+                    class: 'signal-buy', 
+                    emoji: '🟢', 
+                    text: t.buy, 
+                    desc: '市场偏多，可适当建仓',
+                    whyBullish: '巨鲸资金净流入',
+                    whyBullish2: '市场情绪偏正面'
+                },
+                'bearish': { 
+                    class: 'signal-sell', 
+                    emoji: '🔴', 
+                    text: t.sell, 
+                    desc: '市场偏空，建议减仓观望',
+                    whyBearish: '巨鲸资金净流出',
+                    whyBearish2: '市场情绪偏负面'
+                },
+                'neutral': { 
+                    class: 'signal-hold', 
+                    emoji: '⚪', 
+                    text: t.hold, 
+                    desc: '多空不明，建议观望',
+                    whyNeutral: '巨鲸活动不活跃',
+                    whyNeutral2: '市场情绪中性'
+                }
             };
+            
             const config = signalMap[signal.signal] || signalMap.neutral;
-            badge.className = 'signal-badge ' + config.class;
-            emoji.textContent = config.emoji;
-            text.textContent = config.text;
+            main.className = 'signal-main ' + config.class;
+            rec.textContent = config.emoji + ' ' + config.text;
+            desc.textContent = config.desc;
             
-            // 分析文本
-            analysis.textContent = signal.analysis || 'Analyzing market...';
-            
-            // 置信度条
+            // 置信度
             const conf = parseFloat(signal.confidence) || 0;
-            confidenceFill.style.width = (conf * 100) + '%';
-            confidenceFill.className = 'confidence-fill ' + (conf > 0.7 ? 'high' : conf > 0.4 ? 'medium' : 'low');
+            const confPercent = Math.round(conf * 100);
+            confEl.className = 'confidence-simple ' + (conf > 0.7 ? 'high' : conf > 0.4 ? 'medium' : 'low');
+            confEl.innerHTML = `置信度: <span>${confPercent}%</span>`;
             
-            // 因子显示
-            const whaleSignal = signal.whaleActivity?.signal || 'neutral';
-            const sentimentSignal = signal.sentiment?.signal || 'neutral';
-            whaleFactor.textContent = (whaleSignal === 'bullish' ? '🟢 ' : whaleSignal === 'bearish' ? '🔴 ' : '⚪ ') + (signal.whaleActivity?.reason || '-');
-            sentimentFactor.textContent = (sentimentSignal === 'bullish' ? '🟢 ' : sentimentSignal === 'bearish' ? '🔴 ' : '⚪ ') + (signal.sentiment?.reason || '-');
+            // 巨鲸资金
+            const whaleMetrics = signal.whaleActivity?.metrics || {};
+            const netFlow = whaleMetrics.netFlow || 0;
+            whaleNet.textContent = (netFlow >= 0 ? '+' : '') + formatUSD(netFlow);
+            whaleNet.className = 'value ' + (netFlow >= 0 ? 'up' : 'down');
             
-            // 时间戳
+            // 新闻情绪
+            const sentScore = signal.sentiment?.score || 0;
+            sentimentVal.textContent = sentScore > 0.1 ? '📈 正面' : sentScore < -0.1 ? '📉 负面' : '⚖️ 中性';
+            sentimentVal.className = 'value ' + (sentScore > 0.1 ? 'up' : sentScore < -0.1 ? 'down' : '');
+            
+            // 为什么
+            let whyItems = '';
+            if (signal.signal === 'bullish') {
+                whyItems = `<div class="why-item">${config.whyBullish}: ${formatUSD(netFlow)}</div>`;
+                if (sentScore > 0) whyItems += `<div class="why-item">${config.whyBullish2}</div>`;
+            } else if (signal.signal === 'bearish') {
+                whyItems = `<div class="why-item">${config.whyBearish}: ${formatUSD(Math.abs(netFlow))}</div>`;
+                if (sentScore < 0) whyItems += `<div class="why-item">${config.whyBearish2}</div>`;
+            } else {
+                whyItems = `<div class="why-item">${config.whyNeutral}</div>`;
+                whyItems += `<div class="why-item">等待更明确信号</div>`;
+            }
+            why.innerHTML = whyItems;
+            
+            // 时间
             const time = new Date(signal.timestamp);
             timestamp.textContent = t.lastUpdated + ' ' + time.toLocaleTimeString();
             
-            // 更新快捷入口
+            // 快捷入口
             document.getElementById('signalValue').textContent = config.text;
         }
         
