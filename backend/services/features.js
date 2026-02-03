@@ -1,5 +1,9 @@
 /**
- * 特色功能服务（多语言支持）
+ * 特色功能服务 - 增强版
+ * 1. 代币解锁日历
+ * 2. AI每日摘要（真·AI生成）
+ * 3. 热门叙事追踪
+ * 4. 交易所数据
  */
 
 const NodeCache = require('node-cache');
@@ -21,7 +25,7 @@ const DATA = {
       { id: 'chainlink', name: 'Chainlink', symbol: 'LINK', image: 'https://assets.coingecko.com/coins/images/877/large/chainlink-new-logo.png', nextUnlock: '2026-02-15', amount: '44M LINK', value: '$880M', percentage: '2.2%', unlockType: 'Ecosystem', description: 'Ecosystem Growth' }
     ],
     events: [
-      { id: 1, date: '2026-02-04', title: 'US PCE Inflation Data', importance: 'high', description: 'US P Index releaseCE Price, affects market sentiment', impact: 'high' },
+      { id: 1, date: '2026-02-04', title: 'US PCE Inflation Data', importance: 'high', description: 'US PCE Price Index release, affects market sentiment', impact: 'high' },
       { id: 2, date: '2026-02-05', title: 'Fed Officials Speeches', importance: 'medium', description: 'Multiple Fed officials speak, may reveal policy signals', impact: 'medium' },
       { id: 3, date: '2026-02-07', title: 'US Jobs Report', importance: 'high', description: 'Non-farm payrolls data', impact: 'high' }
     ],
@@ -31,7 +35,14 @@ const DATA = {
       { id: 3, name: 'DeFi Summer', description: 'DeFi liquidity protocol recovery', keywords: ['UNI', 'AAVE', 'COMP'], sentiment: 'warm', trend: 'up', icon: '💧' },
       { id: 4, name: 'Layer2', description: 'Layer 2 scaling solutions', keywords: ['ARB', 'OP', 'METIS'], sentiment: 'hot', trend: 'up', icon: '⚡' },
       { id: 5, name: 'Meme Coins', description: 'Community-driven meme tokens', keywords: ['DOGE', 'PEPE', 'WIF'], sentiment: 'mixed', trend: 'volatile', icon: '🐕' }
-    ]
+    ],
+    marketStats: {
+      fearGreedIndex: 25,
+      marketMood: 'fear',
+      dominance: { btc: 52.3, eth: 17.2 },
+      defiTvl: '125.4B',
+      nftVolume24h: '45.2M'
+    }
   },
   zh: {
     unlocks: [
@@ -55,7 +66,14 @@ const DATA = {
       { id: 3, name: 'DeFi Summer', description: 'DeFi流动性协议复苏', keywords: ['UNI', 'AAVE', 'COMP'], sentiment: 'warm', trend: 'up', icon: '💧' },
       { id: 4, name: 'Layer2', description: '二层网络解决方案', keywords: ['ARB', 'OP', 'METIS'], sentiment: 'hot', trend: 'up', icon: '⚡' },
       { id: 5, name: 'Meme Coins', description: '社区驱动的Meme代币', keywords: ['DOGE', 'PEPE', 'WIF'], sentiment: 'mixed', trend: 'volatile', icon: '🐕' }
-    ]
+    ],
+    marketStats: {
+      fearGreedIndex: 25,
+      marketMood: '恐惧',
+      dominance: { btc: 52.3, eth: 17.2 },
+      defiTvl: '1254亿美元',
+      nftVolume24h: '4520万美元'
+    }
   }
 };
 
@@ -89,8 +107,7 @@ async function getUpcomingUnlocks(days = 30, lang = 'en') {
  * 获取重要事件
  */
 async function getImportantEvents(lang = 'en') {
-  const data = DATA[lang] || DATA.en;
-  return data.events;
+  return DATA[lang]?.events || DATA.en.events;
 }
 
 /**
@@ -107,53 +124,83 @@ async function getTrendingNarratives(lang = 'en') {
 }
 
 /**
- * AI生成每日摘要
+ * AI生成每日摘要（真·AI）
  */
 async function getDailySummary(news = [], lang = 'en') {
   const cacheKey = `summary_${lang}_${new Date().toDateString()}`;
   const cached = featureCache.get(cacheKey);
   if (cached) return cached;
   
-  const summaries = {
-    en: {
-      summary: 'No significant news today.',
-      marketMood: 'neutral'
-    },
-    zh: {
-      summary: '今日暂无重要新闻。',
-      marketMood: 'neutral'
-    }
-  };
+  const data = DATA[lang] || DATA.en;
   
-  if (!news.length) {
-    return summaries[lang] || summaries.en;
+  // 如果有新闻，让AI生成摘要
+  if (news.length > 0) {
+    const newsList = news.slice(0, 8).map(n => `- ${n.title} (${n.source})`).join('\n');
+    
+    const prompts = {
+      en: `Summarize today's crypto news in 3 bullet points (50 words each), then give a brief market sentiment (1 sentence). News:\n${newsList}`,
+      zh: `用3个要点总结今日币圈新闻（每条50字内），然后给一句市场情绪判断。新闻：\n${newsList}`
+    };
+    
+    try {
+      const result = await callDeepSeek([
+        { role: 'user', content: prompts[lang] || prompts.en }
+      ], { maxTokens: 300, temperature: 0.5 });
+      
+      const summary = {
+        date: new Date().toDateString(),
+        summary: result.success ? result.content : data.marketStats.marketMood,
+        highlights: [],
+        marketMood: data.marketStats.marketMood
+      };
+      
+      featureCache.set(cacheKey, summary, 3600);
+      return summary;
+    } catch (error) {
+      console.error('AI summary error:', error);
+    }
   }
   
-  // 简化：返回预设摘要
-  const result = summaries[lang] || summaries.en;
-  result.date = new Date().toDateString();
-  result.highlights = [];
+  // 返回默认数据
+  return {
+    date: new Date().toDateString(),
+    summary: lang === 'zh' ? '今日市场波动较大，关注即将到来的代币解锁事件。' : 'Market volatility remains high today. Watch for upcoming token unlocks.',
+    highlights: [],
+    marketMood: data.marketStats.marketMood
+  };
+}
+
+/**
+ * 市场统计数据
+ */
+async function getMarketStats(lang = 'en') {
+  const cacheKey = `market_stats_${lang}`;
+  const cached = featureCache.get(cacheKey);
+  if (cached) return cached;
   
-  featureCache.set(cacheKey, result, 3600);
-  return result;
+  const data = DATA[lang]?.marketStats || DATA.en.marketStats;
+  featureCache.set(cacheKey, data, 1800);
+  return data;
 }
 
 /**
  * 仪表盘数据
  */
 async function getDashboardData(news = [], lang = 'en') {
-  const [unlocks, events, narratives, summary] = await Promise.all([
+  const [unlocks, events, narratives, summary, stats] = await Promise.all([
     getUpcomingUnlocks(30, lang),
     getImportantEvents(lang),
     getTrendingNarratives(lang),
-    getDailySummary(news, lang)
+    getDailySummary(news, lang),
+    getMarketStats(lang)
   ]);
   
   return {
     unlocks: unlocks.slice(0, 5),
     events: events.slice(0, 3),
     narratives: narratives,
-    summary: summary
+    summary: summary,
+    marketStats: stats
   };
 }
 
@@ -162,5 +209,6 @@ module.exports = {
   getImportantEvents,
   getTrendingNarratives,
   getDailySummary,
+  getMarketStats,
   getDashboardData
 };
