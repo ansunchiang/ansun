@@ -149,11 +149,13 @@ async function getNews({ lang = 'en', limit = 30, source, category }) {
     news = news.filter(n => n.source === source);
   }
   
+  // 先限制数量，再翻译（提高速度）
+  news = news.slice(0, limit);
+  
   // 翻译成目标语言
   news = await translateNews(news, lang);
   
-  // 限制数量
-  return news.slice(0, limit);
+  return news;
 }
 
 /**
@@ -176,8 +178,9 @@ async function searchNews(keyword, limit = 20, lang = 'all') {
     item.content.toLowerCase().includes(keywordLower)
   );
   
-  // 翻译
-  const translated = await translateNews(filtered.slice(0, limit), lang);
+  // 先限制，再翻译
+  const results = filtered.slice(0, limit);
+  const translated = await translateNews(results, lang);
   
   return translated;
 }
