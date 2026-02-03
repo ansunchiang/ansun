@@ -474,7 +474,7 @@
         async function loadDashboard() {
             const t = i18n[currentLang];
             try {
-                const res = await fetch(`${API_BASE}/features/dashboard`);
+                const res = await fetch(`${API_BASE}/features/dashboard?lang=${currentLang}`);
                 const data = await res.json();
                 if (data.success) {
                     renderUnlocks(data.data.unlocks, t);

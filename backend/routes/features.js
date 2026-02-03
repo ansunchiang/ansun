@@ -12,12 +12,14 @@ const { getUpcomingUnlocks, getImportantEvents, getTrendingNarratives, getDailyS
  */
 router.get('/dashboard', async (req, res) => {
   try {
+    const lang = req.query.lang || 'en';
+    
     // 获取新闻用于摘要
     const newsRes = await fetch(`${req.protocol}://${req.get('host')}/api/news/en?limit=10`);
     const newsData = await newsRes.json();
     const news = newsData.success ? newsData.data : [];
     
-    const data = await getDashboardData(news);
+    const data = await getDashboardData(news, lang);
     
     res.json({
       success: true,
@@ -37,8 +39,8 @@ router.get('/dashboard', async (req, res) => {
  */
 router.get('/unlocks', async (req, res) => {
   try {
-    const { days = 30 } = req.query;
-    const unlocks = await getUpcomingUnlocks(parseInt(days));
+    const { days = 30, lang = 'en' } = req.query;
+    const unlocks = await getUpcomingUnlocks(parseInt(days), lang);
     
     res.json({
       success: true,
@@ -59,7 +61,8 @@ router.get('/unlocks', async (req, res) => {
  */
 router.get('/events', async (req, res) => {
   try {
-    const events = await getImportantEvents();
+    const lang = req.query.lang || 'en';
+    const events = await getImportantEvents(lang);
     
     res.json({
       success: true,
@@ -80,7 +83,8 @@ router.get('/events', async (req, res) => {
  */
 router.get('/narratives', async (req, res) => {
   try {
-    const narratives = await getTrendingNarratives();
+    const lang = req.query.lang || 'en';
+    const narratives = await getTrendingNarratives(lang);
     
     res.json({
       success: true,
@@ -101,11 +105,8 @@ router.get('/narratives', async (req, res) => {
  */
 router.get('/summary', async (req, res) => {
   try {
-    const newsRes = await fetch(`${req.protocol}://${req.get('host')}/api/news/en?limit=20`);
-    const newsData = await newsRes.json();
-    const news = newsData.success ? newsData.data : [];
-    
-    const summary = await getDailySummary(news);
+    const lang = req.query.lang || 'en';
+    const summary = await getDailySummary([], lang);
     
     res.json({
       success: true,
