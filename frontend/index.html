@@ -33,7 +33,7 @@
         .news-card h3 a:hover { color: #00d4ff; }
         .news-meta { display: flex; gap: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 10px; flex-wrap: wrap; }
         .news-source { background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; }
-        .ai-section { margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; }
+        .ai-section { margin-bottom: 50px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; }
         .ai-chat { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; }
         .ai-chat .user { align-self: flex-end; background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 15px 20px; border-radius: 20px; max-width: 80%; }
         .ai-chat .assistant { align-self: flex-start; background: rgba(255,255,255,0.1); padding: 15px 20px; border-radius: 20px; max-width: 80%; }
@@ -61,18 +61,8 @@
             <h1 id="pageTitle">Ansun 🚀</h1>
             <p id="pageSubtitle">Crypto News AI Aggregator</p>
         </header>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search crypto news...">
-            <button id="searchBtn" onclick="searchNews()">Search</button>
-        </div>
-        <div class="tabs">
-            <button class="tab active" onclick="showCategory('all')" id="tabAll">All</button>
-            <button class="tab" onclick="showCategory('news')" id="tabNews">News</button>
-            <button class="tab" onclick="refreshNews()" id="tabRefresh">🔄</button>
-        </div>
-        <div id="newsContainer" class="news-grid">
-            <div class="loading" id="loadingText">Loading...</div>
-        </div>
+        
+        <!-- AI助手板块 - 放在最上面 -->
         <div class="ai-section">
             <h2 id="aiTitle">🤖 AI Assistant</h2>
             <p id="aiSubtitle" style="color: rgba(255,255,255,0.6); margin-bottom: 20px;">Crypto knowledge Q&A only</p>
@@ -84,12 +74,30 @@
                 <button id="askBtn" onclick="askAI()">Ask</button>
             </div>
         </div>
+        
+        <!-- 搜索框 -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search crypto news...">
+            <button id="searchBtn" onclick="searchNews()">Search</button>
+        </div>
+        
+        <!-- 新闻分类 -->
+        <div class="tabs">
+            <button class="tab active" onclick="showCategory('all')" id="tabAll">All</button>
+            <button class="tab" onclick="showCategory('news')" id="tabNews">News</button>
+            <button class="tab" onclick="refreshNews()" id="tabRefresh">🔄</button>
+        </div>
+        
+        <!-- 新闻列表 -->
+        <div id="newsContainer" class="news-grid">
+            <div class="loading" id="loadingText">Loading...</div>
+        </div>
+        
         <footer>
             <p id="footerCopyright">© 2026 Ansun</p>
         </footer>
     </div>
     <script>
-        // 语言配置：界面语言、新闻语言、AI语言保持一致
         const i18n = {
             en: {
                 title: "Ansun 🚀", subtitle: "Crypto News AI Aggregator",
@@ -122,7 +130,7 @@
                 askPlaceholder: "質問を入力...", askBtn: "質問",
                 copyright: "© 2026 Ansun",
                 loading: "読み込み中...", noNews: "ニュースなし", error: "エラー", thinking: "考え中...",
-                apiLang: "zh"  // 日语用户也看中文新闻
+                apiLang: "zh"
             },
             ko: {
                 title: "Ansun 🚀", subtitle: "암호화폐 뉴스 AI",
@@ -133,7 +141,7 @@
                 askPlaceholder: "질문을 입력하세요...", askBtn: "질문",
                 copyright: "© 2026 Ansun",
                 loading: "로딩 중...", noNews: "뉴스 없음", error: "오류", thinking: "생각 중...",
-                apiLang: "zh"  // 韩语用户也看中文新闻
+                apiLang: "zh"
             },
             pt: {
                 title: "Ansun 🚀", subtitle: "Notícias de Criptomoedas",
@@ -210,7 +218,6 @@
             const t = i18n[currentLang];
             container.innerHTML = `<div class="loading">${t.loading}</div>`;
             
-            // 使用用户当前界面语言的API
             const apiLang = i18n[currentLang].apiLang;
             const url = `${API_BASE}/news/${apiLang}?limit=30`;
             
