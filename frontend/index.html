@@ -609,39 +609,27 @@
             document.getElementById('signalLoading').style.display = 'block';
             document.getElementById('signalContent').style.display = 'none';
             
-            // 备用：如果10秒还没加载完，显示模拟数据
-            const timeoutId = setTimeout(() => {
-                console.log('Signal API timeout, showing fallback data');
-                renderSignal({
-                    symbol: coin,
-                    signal: 'neutral',
-                    recommendation: 'HOLD',
-                    emoji: '⚪',
-                    confidence: '0.5',
-                    analysis: '数据加载中，请稍候...',
-                    whaleActivity: { metrics: { netFlow: 0, largeBuyCount: 0, largeSellCount: 0 } },
-                    sentiment: { score: 0, reason: '暂无数据' },
-                    timestamp: new Date().toISOString()
-                }, t);
-            }, 10000);
+            // 立即显示备用数据，同时尝试加载API
+            renderSignal({
+                symbol: coin,
+                signal: 'neutral',
+                recommendation: 'HOLD',
+                emoji: '⚪',
+                confidence: '0.5',
+                analysis: '正在分析市场数据...',
+                whaleActivity: { metrics: { netFlow: 0, largeBuyCount: 0, largeSellCount: 0 } },
+                sentiment: { score: 0, reason: '加载中...' },
+                timestamp: new Date().toISOString()
+            }, t);
             
             try {
                 const res = await fetch(`${API_BASE}/signal/coin/${coin}`);
                 const data = await res.json();
-                clearTimeout(timeoutId);
-                if (data.success) renderSignal(data.data, t);
+                if (data.success) {
+                    renderSignal(data.data, t);
+                }
             } catch (e) { 
                 console.error('Signal error:', e);
-                clearTimeout(timeoutId);
-                // Use overall signal as fallback
-                try {
-                    const res2 = await fetch(`${API_BASE}/signal/overall`);
-                    const data2 = await res2.json();
-                    if (data2.success) {
-                        data2.data.symbol = coin;
-                        renderSignal(data2.data, t);
-                    }
-                } catch(e2) {}
             }
         }
         
