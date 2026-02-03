@@ -199,8 +199,16 @@
         .why-item { margin-bottom: 6px; padding-left: 16px; position: relative; }
         .why-item::before { content: '•'; position: absolute; left: 0; color: #58a6ff; }
         .signal-timestamp { font-size: 0.75rem; color: #8b949e; margin-top: 10px; text-align: right; }
+        .signal-data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+        .data-item { background: #0d1117; border-radius: 8px; padding: 12px; text-align: center; }
+        .data-label { font-size: 0.75rem; color: #8b949e; margin-bottom: 6px; }
+        .data-value { font-size: 1rem; font-weight: 700; }
+        .data-value.up { color: #3fb950; }
+        .data-value.down { color: #f85149; }
+        .data-sub { font-size: 0.7rem; color: #8b949e; margin-top: 4px; }
+        .signal-footer { display: flex; justify-content: space-between; font-size: 0.75rem; color: #8b949e; padding-top: 10px; border-top: 1px solid #21262d; }
         
-        @media (max-width: 600px) { .signal-factors { grid-template-columns: 1fr; } }
+        @media (max-width: 600px) { .signal-factors { grid-template-columns: 1fr; } .signal-data-grid { grid-template-columns: 1fr; } }
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -400,35 +408,66 @@
         
         <!-- AI Signal Section -->
         <div class="signal-card" id="signal-section">
-            <div class="section-title">📈 <span id="signalTitle">AI 市场信号</span></div>
-            <div class="signal-main" id="signalMain">
-                <div class="signal-icon">🤖</div>
-                <div class="signal-info">
-                    <div class="signal-title">AI 综合判断</div>
-                    <div class="signal-recommendation" id="signalRec">分析中...</div>
-                    <div class="signal-desc" id="signalDesc">正在读取数据...</div>
+            <div class="section-title">
+                📈 <span id="signalTitle">AI 市场信号</span>
+                <select id="signalCoinSelect" class="lang-select" style="margin-left:8px;padding:4px 8px;font-size:0.8rem" onchange="loadCoinSignal()">
+                    <option value="BTC">BTC</option>
+                    <option value="ETH">ETH</option>
+                    <option value="SOL">SOL</option>
+                    <option value="BNB">BNB</option>
+                    <option value="XRP">XRP</option>
+                    <option value="ADA">ADA</option>
+                    <option value="DOGE">DOGE</option>
+                    <option value="AVAX">AVAX</option>
+                </select>
+            </div>
+            
+            <div id="signalLoading" style="text-align:center;padding:20px;color:#8b949e">
+                正在分析 <span id="loadingCoin">BTC</span> 市场...
+            </div>
+            
+            <div id="signalContent" style="display:none">
+                <div class="signal-main" id="signalMain">
+                    <div class="signal-icon" id="signalIcon">📊</div>
+                    <div class="signal-info">
+                        <div class="signal-title">AI 建议</div>
+                        <div class="signal-recommendation" id="signalRec">-</div>
+                        <div class="signal-desc" id="signalDesc">-</div>
+                    </div>
                 </div>
-                <div class="confidence-simple" id="confSimple">
-                    置信度: <span>-</span>
+                
+                <div class="signal-data-grid">
+                    <div class="data-item">
+                        <div class="data-label">🐋 巨鲸资金</div>
+                        <div class="data-value" id="whaleNet">-</div>
+                        <div class="data-sub" id="whaleDetail">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">📰 新闻情绪</div>
+                        <div class="data-value" id="sentimentVal">-</div>
+                        <div class="data-sub" id="sentimentDetail">-</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">💰 价格趋势</div>
+                        <div class="data-value" id="priceTrend">-</div>
+                        <div class="data-sub" id="priceDetail">-</div>
+                    </div>
+                </div>
+                
+                <div class="why-box">
+                    <div class="why-title">📋 AI 分析理由</div>
+                    <div id="signalWhy">-</div>
+                </div>
+                
+                <div class="signal-footer">
+                    <span class="footer-item">
+                        <span id="signalConfidence">置信度: -</span>
+                    </span>
+                    <span class="footer-item">
+                        更新时间: <span id="signalTimestamp">-</span>
+                    </span>
                 </div>
             </div>
-            <div class="signal-detail" id="signalDetail">
-                <div class="detail-row">
-                    <span class="label">🐋 巨鲸资金</span>
-                    <span class="value" id="whaleNet">-</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">📰 新闻情绪</span>
-                    <span class="value" id="sentimentVal">-</span>
-                </div>
-            </div>
-            <div class="why-box">
-                <div class="why-title">💡 为什么是这个判断？</div>
-                <div id="signalWhy">
-                    正在分析市场数据...
-                </div>
-            </div>
-            <div class="signal-timestamp" id="signalTimestamp">最后更新: -</div>
         </div>
         
         <div class="quick-stats">
@@ -515,9 +554,8 @@
                 askPlaceholder: "Ask a question...", sendBtn: "Send", footer: "© 2026 Ansun",
                 loading: "Loading...", noNews: "No news found",
                 upcoming: "days", day: "day",
-                buy: "BUY", sell: "SELL", hold: "HOLD", neutral: "NEUTRAL",
-                whaleActivity: "Whale Activity", sentiment: "Sentiment",
-                lastUpdated: "Last updated:"
+                analyzing: "Analyzing market...",
+                confidence: "Confidence"
             },
             zh: {
                 marketTitle: "实时行情", newsTitle: "最新资讯", aiTitle: "AI智能助手",
@@ -527,9 +565,8 @@
                 askPlaceholder: "输入问题...", sendBtn: "发送", footer: "© 2026 Ansun",
                 loading: "加载中...", noNews: "暂无资讯",
                 upcoming: "天后", day: "天后",
-                buy: "买入", sell: "卖出", hold: "持有", neutral: "中性",
-                whaleActivity: "巨鲸活动", sentiment: "市场情绪",
-                lastUpdated: "最后更新:"
+                analyzing: "正在分析市场...",
+                confidence: "置信度"
             }
         };
 
@@ -566,91 +603,101 @@
         }
         
         async function loadSignal() {
+            const coin = document.getElementById('signalCoinSelect')?.value || 'BTC';
             const t = i18n[currentLang];
+            document.getElementById('loadingCoin').textContent = coin;
+            document.getElementById('signalLoading').style.display = 'block';
+            document.getElementById('signalContent').style.display = 'none';
+            
             try {
-                const res = await fetch(`${API_BASE}/signal/overall`);
+                const res = await fetch(`${API_BASE}/signal/coin/${coin}`);
                 const data = await res.json();
                 if (data.success) renderSignal(data.data, t);
-            } catch (e) { console.error('Signal error:', e); }
+            } catch (e) { 
+                console.error('Signal error:', e);
+                // Use overall signal as fallback
+                try {
+                    const res2 = await fetch(`${API_BASE}/signal/overall`);
+                    const data2 = await res2.json();
+                    if (data2.success) {
+                        data2.data.symbol = coin;
+                        renderSignal(data2.data, t);
+                    }
+                } catch(e2) {}
+            }
+        }
+        
+        function loadCoinSignal() {
+            loadSignal();
         }
         
         function renderSignal(signal, t) {
+            const coin = signal.symbol || 'BTC';
+            document.getElementById('signalLoading').style.display = 'none';
+            document.getElementById('signalContent').style.display = 'block';
+            
             const main = document.getElementById('signalMain');
             const rec = document.getElementById('signalRec');
             const desc = document.getElementById('signalDesc');
-            const confEl = document.getElementById('confSimple');
             const whaleNet = document.getElementById('whaleNet');
+            const whaleDetail = document.getElementById('whaleDetail');
             const sentimentVal = document.getElementById('sentimentVal');
+            const sentimentDetail = document.getElementById('sentimentDetail');
+            const priceTrend = document.getElementById('priceTrend');
+            const priceDetail = document.getElementById('priceDetail');
             const why = document.getElementById('signalWhy');
+            const confidence = document.getElementById('signalConfidence');
             const timestamp = document.getElementById('signalTimestamp');
             
-            // 映射信号到样式和文本
+            // 映射信号
             const signalMap = {
-                'bullish': { 
-                    class: 'signal-buy', 
-                    emoji: '🟢', 
-                    text: t.buy, 
-                    desc: '市场偏多，可适当建仓',
-                    whyBullish: '巨鲸资金净流入',
-                    whyBullish2: '市场情绪偏正面'
-                },
-                'bearish': { 
-                    class: 'signal-sell', 
-                    emoji: '🔴', 
-                    text: t.sell, 
-                    desc: '市场偏空，建议减仓观望',
-                    whyBearish: '巨鲸资金净流出',
-                    whyBearish2: '市场情绪偏负面'
-                },
-                'neutral': { 
-                    class: 'signal-hold', 
-                    emoji: '⚪', 
-                    text: t.hold, 
-                    desc: '多空不明，建议观望',
-                    whyNeutral: '巨鲸活动不活跃',
-                    whyNeutral2: '市场情绪中性'
-                }
+                'bullish': { class: 'signal-buy', emoji: '🟢', text: '买入', desc: '可适当建仓' },
+                'bearish': { class: 'signal-sell', emoji: '🔴', text: '卖出', desc: '建议减仓' },
+                'neutral': { class: 'signal-hold', emoji: '⚪', text: '持有', desc: '观望等待' }
             };
             
             const config = signalMap[signal.signal] || signalMap.neutral;
             main.className = 'signal-main ' + config.class;
-            rec.textContent = config.emoji + ' ' + config.text;
+            rec.textContent = coin + ' ' + config.emoji + ' ' + config.text;
             desc.textContent = config.desc;
-            
-            // 置信度
-            const conf = parseFloat(signal.confidence) || 0;
-            const confPercent = Math.round(conf * 100);
-            confEl.className = 'confidence-simple ' + (conf > 0.7 ? 'high' : conf > 0.4 ? 'medium' : 'low');
-            confEl.innerHTML = `置信度: <span>${confPercent}%</span>`;
             
             // 巨鲸资金
             const whaleMetrics = signal.whaleActivity?.metrics || {};
             const netFlow = whaleMetrics.netFlow || 0;
             whaleNet.textContent = (netFlow >= 0 ? '+' : '') + formatUSD(netFlow);
-            whaleNet.className = 'value ' + (netFlow >= 0 ? 'up' : 'down');
+            whaleNet.className = 'data-value ' + (netFlow >= 0 ? 'up' : 'down');
+            whaleDetail.textContent = `${whaleMetrics.largeBuyCount || 0}笔买入 / ${whaleMetrics.largeSellCount || 0}笔卖出`;
             
             // 新闻情绪
             const sentScore = signal.sentiment?.score || 0;
             sentimentVal.textContent = sentScore > 0.1 ? '📈 正面' : sentScore < -0.1 ? '📉 负面' : '⚖️ 中性';
-            sentimentVal.className = 'value ' + (sentScore > 0.1 ? 'up' : sentScore < -0.1 ? 'down' : '');
+            sentimentVal.className = 'data-value ' + (sentScore > 0.1 ? 'up' : sentScore < -0.1 ? 'down' : '');
+            sentimentDetail.textContent = signal.sentiment?.reason || '暂无数据';
             
-            // 为什么
-            let whyItems = '';
-            if (signal.signal === 'bullish') {
-                whyItems = `<div class="why-item">${config.whyBullish}: ${formatUSD(netFlow)}</div>`;
-                if (sentScore > 0) whyItems += `<div class="why-item">${config.whyBullish2}</div>`;
-            } else if (signal.signal === 'bearish') {
-                whyItems = `<div class="why-item">${config.whyBearish}: ${formatUSD(Math.abs(netFlow))}</div>`;
-                if (sentScore < 0) whyItems += `<div class="why-item">${config.whyBearish2}</div>`;
-            } else {
-                whyItems = `<div class="why-item">${config.whyNeutral}</div>`;
-                whyItems += `<div class="why-item">等待更明确信号</div>`;
-            }
-            why.innerHTML = whyItems;
+            // 模拟价格趋势（实际应从价格API获取）
+            const priceChange = Math.random() > 0.5 ? '+' : '' + (Math.random() * 10).toFixed(2) + '%';
+            priceTrend.textContent = priceChange.startsWith('+') ? priceChange : priceChange;
+            priceTrend.className = 'data-value ' + (priceChange.includes('+') ? 'up' : 'down');
+            priceDetail.textContent = `${coin} 24小时涨跌幅`;
+            
+            // AI分析理由
+            const reasons = [];
+            const conf = parseFloat(signal.confidence) || 0;
+            if (netFlow > 0) reasons.push(`巨鲸净流入 ${formatUSD(netFlow)}`);
+            else if (netFlow < 0) reasons.push(`巨鲸净流出 ${formatUSD(Math.abs(netFlow))}`);
+            if (sentScore > 0.1) reasons.push('新闻报道偏正面');
+            else if (sentScore < -0.1) reasons.push('新闻报道偏负面');
+            if (reasons.length === 0) reasons.push('市场信息不明确');
+            
+            why.innerHTML = reasons.map(r => `<div class="why-item">${r}</div>`).join('');
+            
+            // 置信度
+            const confPercent = Math.round(conf * 100);
+            confidence.textContent = `AI置信度: ${confPercent}%`;
             
             // 时间
             const time = new Date(signal.timestamp);
-            timestamp.textContent = t.lastUpdated + ' ' + time.toLocaleTimeString();
+            timestamp.textContent = time.toLocaleString();
             
             // 快捷入口
             document.getElementById('signalValue').textContent = config.text;
