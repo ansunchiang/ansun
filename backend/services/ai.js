@@ -319,10 +319,78 @@ const responses = {
   en: 'Sorry, I can only answer questions related to cryptocurrency and blockchain.'
 };
 
+/**
+ * 翻译文本
+ */
+async function translateText(text, targetLang) {
+  if (!text || text.trim().length === 0) return text;
+  if (targetLang === 'en') return text;
+  
+  const langMap = {
+    'zh': 'Chinese (Simplified)',
+    'ja': 'Japanese',
+    'ko': 'Korean',
+    'pt': 'Portuguese',
+    'es': 'Spanish',
+    'fr': 'French'
+  };
+  
+  const target = langMap[targetLang] || 'English';
+  
+  const systemPrompt = `You are a professional translator. Translate the following text to ${target}. 
+  - Keep the meaning accurate
+  - Keep proper nouns (names, terms) in original language if appropriate
+  - Keep formatting (line breaks, bullets) as is
+  - Output ONLY the translated text, no explanations`;
+
+  try {
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: text.slice(0, 2000) }  // 限制长度
+    ];
+    
+    const result = await callDeepSeek(messages, { maxTokens: 2000, temperature: 0.1 });
+    
+    if (result.success) {
+      return result.content.trim();
+    }
+  } catch (error) {
+    console.error('翻译失败:', error.message);
+  }
+  
+  return text;  // 翻译失败返回原文
+}
+
+/**
+ * 翻译新闻列表
+ */
+async function translateNews(newsItems, targetLang) {
+  if (targetLang === 'en') return newsItems;
+  
+  console.log(`[翻译中] ${newsItems.length} 条新闻翻译成 ${targetLang}...`);
+  
+  const translated = await Promise.all(newsItems.map(async (item) => {
+    const title = await translateText(item.title, targetLang);
+    const content = await translateText(item.content, targetLang);
+    
+    return {
+      ...item,
+      title,
+      content,
+      lang: targetLang
+    };
+  }));
+  
+  console.log(`[翻译完成] ${translated.length} 条新闻`);
+  return translated;
+}
+
 module.exports = {
   callDeepSeek,
   askQuestion,
   getKnowledgeBaseStats,
   clearKnowledgeBase,
+  translateText,
+  translateNews,
   knowledgeBase: knowledgeBase
 };

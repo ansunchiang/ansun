@@ -6,6 +6,7 @@
 const axios = require('axios');
 const Parser = require('rss-parser');
 const NodeCache = require('node-cache');
+const { translateNews } = require('./ai');
 
 const parser = new Parser();
 
@@ -132,7 +133,7 @@ async function getZHNews() {
 }
 
 /**
- * 获取新闻（默认英文）
+ * 获取新闻（默认英文，自动翻译）
  */
 async function getNews({ lang = 'en', limit = 30, source, category }) {
   let news;
@@ -147,6 +148,9 @@ async function getNews({ lang = 'en', limit = 30, source, category }) {
   if (source) {
     news = news.filter(n => n.source === source);
   }
+  
+  // 翻译成目标语言
+  news = await translateNews(news, lang);
   
   // 限制数量
   return news.slice(0, limit);
@@ -164,7 +168,6 @@ async function getNewsByUserLang(userLang) {
  * 搜索新闻
  */
 async function searchNews(keyword, limit = 20, lang = 'all') {
-  const results = [];
   const enNews = await getENNews();
   
   const keywordLower = keyword.toLowerCase();
@@ -173,7 +176,10 @@ async function searchNews(keyword, limit = 20, lang = 'all') {
     item.content.toLowerCase().includes(keywordLower)
   );
   
-  return filtered.slice(0, limit);
+  // 翻译
+  const translated = await translateNews(filtered.slice(0, limit), lang);
+  
+  return translated;
 }
 
 /**
@@ -181,7 +187,12 @@ async function searchNews(keyword, limit = 20, lang = 'all') {
  */
 async function getHotNews(limit = 10, lang = 'all') {
   const news = await getENNews();
-  return news.slice(0, limit);
+  const hotNews = news.slice(0, limit);
+  
+  // 翻译
+  const translated = await translateNews(hotNews, lang);
+  
+  return translated;
 }
 
 /**
