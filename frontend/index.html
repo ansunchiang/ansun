@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="description" content="Crypto news, market data, whale tracking, and AI assistant">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ansun">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="icon" type="image/png" href="/icons/icon-192.png">
     <title>Ansun - Crypto News & Market</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,6 +45,17 @@
             color: #c9d1d9;
             cursor: pointer;
         }
+        .install-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #238636;
+            color: #fff;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: none;
+        }
+        .install-btn:hover { background: #2ea043; }
         .ai-section {
             background: linear-gradient(145deg, #21262d, #161b22);
             border: 1px solid #30363d;
@@ -285,10 +304,13 @@
     <div class="container">
         <header>
             <h1>Ansun</h1>
-            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
-                <option value="en">🇺🇸 English</option>
-                <option value="zh">🇨🇳 中文</option>
-            </select>
+            <div style="display:flex;gap:8px;align-items:center">
+                <button class="install-btn" id="installBtn" onclick="installPWA()">📲 Install</button>
+                <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="zh">🇨🇳 中文</option>
+                </select>
+            </div>
         </header>
         
         <div class="ai-section">
@@ -603,6 +625,36 @@
         
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchNews(); });
         document.getElementById('aiInput').addEventListener('keypress', e => { if (e.key === 'Enter') askAI(); });
+        
+        // PWA Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('✅ SW registered:', reg.scope);
+                }).catch(err => {
+                    console.log('❌ SW failed:', err);
+                });
+            });
+        }
+        
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').style.display = 'block';
+        });
+        
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                document.getElementById('installBtn').style.display = 'none';
+            }
+            deferredPrompt = null;
+        }
+        
         init();
     </script>
 </body>
