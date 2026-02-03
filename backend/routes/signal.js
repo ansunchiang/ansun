@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { generateAISignal, analyzeWhaleActivity, analyzeSentiment } = require('../services/signal');
 const { getCachedNews } = require('../services/news');
-const cache = require('../services/cache');
 
 /**
  * GET /api/signal/overall
@@ -11,7 +10,7 @@ const cache = require('../services/cache');
 router.get('/overall', async (req, res) => {
   try {
     // 获取新闻数据
-    const newsData = cache.get('news_en') || [];
+    const newsData = getCachedNews('en') || [];
     const recentNews = newsData.slice(0, 50); // 取最近50条
     
     // 模拟巨鲸活动数据（实际应该从链上实时获取）

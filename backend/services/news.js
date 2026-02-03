@@ -223,6 +223,14 @@ function getCacheStatus() {
   };
 }
 
+/**
+ * 直接获取缓存的新闻（不触发抓取）
+ */
+function getCachedNews(lang = 'en') {
+  const key = lang === 'zh' ? 'news_zh' : 'news_en';
+  return newsCache.get(key) || [];
+}
+
 module.exports = {
   getNews,
   getNewsByUserLang,
@@ -232,5 +240,6 @@ module.exports = {
   getENNews,
   getZHNews,
   startCacheScheduler,
-  getCacheStatus
+  getCacheStatus,
+  getCachedNews
 };
