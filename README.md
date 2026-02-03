@@ -1,58 +1,101 @@
-# Ansun - 币圈资讯AI聚合平台
+# Ansun 使用说明
 
-只做资讯，不给投资建议
+## 📌 简介
 
-## 功能
+Ansun 是一个币圈资讯与行情一站式平台，帮助你快速了解加密货币市场动态。
 
-- 📰 RSS新闻聚合（CoinDesk, CoinTelegraph, Bitcoin Magazine等）
-- 🤖 AI智能问答（DeepSeek）
-- 🔍 新闻搜索
-- 📱 响应式Web界面
+---
 
-## 技术栈
+## 🎯 核心功能
 
-- 后端：Node.js + Express
-- 前端：原生HTML/CSS/JS
-- AI：DeepSeek API
-- RSS：rss-parser
-- 部署：Nginx
+### 1️⃣ 🤖 AI 智能助手
+- 支持中英文对话
+- 回答币圈知识问题
+- 不提供任何投资建议
+- 支持 Markdown 格式显示
 
-## 快速开始
+**使用方式：** 在页面顶部的AI助手输入框中输入问题，按回车或点击发送。
 
-```bash
-# 安装依赖
-cd backend
-npm install
+---
 
-# 配置环境变量
-cp .env.example .env
-# 编辑.env填入API Key
+### 2️⃣ 📊 实时行情
+- Top 30 加密货币实时价格
+- 24小时涨跌幅
+- 7天涨跌幅
+- 市值排行
 
-# 启动服务
-npm start
-```
+**数据来源：** CoinGecko API，每分钟自动更新。
 
-## 环境变量
+---
 
-```env
-DEEPSEEK_API_KEY=your_api_key
-DEEPSEEK_API_URL=https://api.deepseek.com/chat/completions
-PORT=3000
-```
+### 3️⃣ 📰 最新资讯
+- 聚合多家主流媒体新闻
+- CoinDesk、CoinTelegraph、CryptoSlate、Decrypt
+- 支持搜索功能
 
-## API
+**使用方式：** 在新闻区域右上角输入关键词搜索。
 
-- `GET /api/news` - 获取新闻列表
-- `GET /api/news/hot` - 获取热门新闻
-- `GET /api/news/search?keyword=xxx` - 搜索新闻
-- `POST /api/ai/ask` - AI问答
+---
 
-## 部署
+### 4️⃣ 🔔 代币解锁日历
+- 显示即将解锁的代币
+- 包含解锁数量、预估价值
+- 距离解锁天数倒计时
 
-1. 安装Node.js 20+
-2. 配置Nginx反向代理
-3. 使用PM2或systemd管理进程
+**覆盖代币：** ARB、OP、APT、IMX、FET、MINA、LINK、AGIX 等
 
-## License
+---
 
-MIT
+### 5️⃣ 🔥 热门概念追踪
+- 当前最热门的叙事主题
+- AI + Crypto、RWA、DeFi Summer、Layer2、Meme Coins
+- 相关代币标签
+
+---
+
+### 6️⃣ 📅 重要事件日历
+- 宏观经济事件（PCE通胀、非农就业等）
+- 美联储官员讲话
+- 可能影响市场的重要事件
+
+---
+
+## 🌐 语言切换
+
+页面右上角支持中英文切换：
+- 🇺🇸 English - 英文界面
+- 🇨🇳 中文 - 中文界面
+
+---
+
+## 📱 响应式设计
+
+支持电脑和手机访问，界面自动适配。
+
+---
+
+## ⚠️ 免责声明
+
+- 本平台仅提供资讯，不提供投资建议
+- 币圈有风险，投资需谨慎
+- 数据仅供参考，不构成任何投资意见
+
+---
+
+## 🔗 链接
+
+- **网站：** http://ansun.space
+- **GitHub：** https://github.com/ansunchiang/ansun
+
+---
+
+## 💡 快捷键
+
+| 操作 | 快捷键 |
+|------|--------|
+| 发送AI问题 | Enter |
+| 搜索新闻 | Enter |
+
+---
+
+**更新时间：** 2026-02-04
