@@ -532,7 +532,7 @@
             container.innerHTML = `<div class="loading">${i18n[currentLang].loading}</div>`;
             try {
                 const apiLang = i18n[currentLang].apiLang;
-                const res = await fetch(`${API_BASE}/news/${apiLang}/search?keyword=${encodeURIComponent(keyword)}`);
+                const res = await fetch(`${API_BASE}/news/search?lang=${apiLang}?keyword=${encodeURIComponent(keyword)}`);
                 const data = await res.json();
                 if (data.success) { renderNews(data.data); }
             } catch (error) { container.innerHTML = `<div class="loading">${i18n[currentLang].error}</div>`; }
