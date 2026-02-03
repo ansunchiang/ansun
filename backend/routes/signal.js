@@ -54,7 +54,7 @@ router.get('/coin/:symbol', async (req, res) => {
     const upperSymbol = symbol.toUpperCase();
     
     // 获取相关新闻
-    const newsData = cache.get('news_en') || [];
+    const newsData = getCachedNews('en') || [];
     const coinNews = newsData.filter(n => {
       const text = (n.title + ' ' + n.content).toLowerCase();
       return text.includes(upperSymbol.toLowerCase());
@@ -152,7 +152,7 @@ router.get('/whale-activity', async (req, res) => {
  */
 router.get('/sentiment', async (req, res) => {
   try {
-    const newsData = cache.get('news_en') || [];
+    const newsData = getCachedNews('en') || [];
     const sentiment = analyzeSentiment(newsData.slice(0, 100));
     
     res.json({
