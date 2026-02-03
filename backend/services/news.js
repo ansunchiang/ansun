@@ -4,9 +4,11 @@
  */
 
 const axios = require('axios');
-const RSS = require('rss');
+const Parser = require('rss-parser');
 const iconv = require('iconv-lite');
 const NodeCache = require('node-cache');
+
+const parser = new Parser();
 
 // 缓存5分钟
 const newsCache = new NodeCache({ stdTTL: 300 });
@@ -32,34 +34,8 @@ const RSS_SOURCES = {
  */
 async function fetchRSS(url) {
   try {
-    const response = await axios.get(url, {
-      timeout: 10000,
-      responseType: 'arraybuffer'
-    });
-    
-    // 检测编码
-    const contentType = response.headers['content-type'] || '';
-    let html = null;
-    
-    if (contentType.includes('utf-8') || contentType.includes('utf8')) {
-      html = response.data.toString('utf-8');
-    } else {
-      try {
-        html = iconv.decode(response.data, 'gbk');
-      } catch {
-        html = response.data.toString('utf-8', 'ignore');
-      }
-    }
-    
-    const feed = new RSS({
-      custom_fields: {
-        item: ['pubDate', 'description', 'link', 'title', 'source']
-      }
-    });
-    
-    const parsed = feed.parseXML(html);
-    return parsed.items || [];
-    
+    const feed = await parser.parseURL(url);
+    return feed.items || [];
   } catch (error) {
     console.error(`RSS获取失败: ${url}`, error.message);
     return [];
@@ -74,7 +50,7 @@ function formatNews(items, source) {
     id: item.guid || item.link,
     title: (item.title || '').trim(),
     link: item.link || item.url,
-    content: (item.description || item.content || item.summary || '').slice(0, 500),
+    content: (item.contentSnippet || item.content || item.description || '').slice(0, 500),
     timestamp: item.pubDate ? new Date(item.pubDate).getTime() : Date.now(),
     source: source,
     lang: RSS_SOURCES.en.some(s => s.name === source) ? 'en' : 'zh'
@@ -100,8 +76,9 @@ async function getENNews() {
       const items = await fetchRSS(source.url);
       const formatted = formatNews(items, source.name);
       allNews.push(...formatted);
+      console.log(`✅ 获取 ${source.name}: ${formatted.length} 条`);
     } catch (e) {
-      console.error(`${source.name} 失败:`, e.message);
+      console.error(`❌ ${source.name}: ${e.message}`);
     }
   }
   
@@ -135,8 +112,9 @@ async function getZHNews() {
       const items = await fetchRSS(source.url);
       const formatted = formatNews(items, source.name);
       allNews.push(...formatted);
+      console.log(`✅ 获取 ${source.name}: ${formatted.length} 条`);
     } catch (e) {
-      console.error(`${source.name} 失败:`, e.message);
+      console.error(`❌ ${source.name}: ${e.message}`);
     }
   }
   
