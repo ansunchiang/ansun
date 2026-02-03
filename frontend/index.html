@@ -330,25 +330,25 @@
         </div>
         
         <div class="quick-stats">
-            <div class="quick-stat">
+            <div class="quick-stat" onclick="scrollToSection('unlocks-section')">
                 <div class="icon">🔔</div>
                 <div class="label">Unlocks</div>
                 <div class="value" id="unlockValue">-</div>
                 <div class="sub">This Month</div>
             </div>
-            <div class="quick-stat">
+            <div class="quick-stat" onclick="scrollToSection('narratives-section')">
                 <div class="icon">🔥</div>
                 <div class="label">Narratives</div>
                 <div class="value" id="narrativeValue">-</div>
                 <div class="sub">Trending</div>
             </div>
-            <div class="quick-stat">
+            <div class="quick-stat" onclick="scrollToSection('whale-section')">
                 <div class="icon">🐋</div>
                 <div class="label">Whale Tx</div>
                 <div class="value" id="whaleValue">-</div>
                 <div class="sub">Large</div>
             </div>
-            <div class="quick-stat">
+            <div class="quick-stat" onclick="scrollToSection('market-section')">
                 <div class="icon">📊</div>
                 <div class="label">DeFi TVL</div>
                 <div class="value" id="tvlValue">-</div>
@@ -358,7 +358,7 @@
         
         <div class="main-grid">
             <div>
-                <div class="section-card">
+                <div class="section-card" id="market-section">
                     <div class="section-title">📊 <span id="marketTitle">Live Market</span></div>
                     <div class="market-header" id="marketHeader"><div class="loading">Loading...</div></div>
                     <table class="coin-table">
@@ -366,13 +366,13 @@
                         <tbody id="coinTable"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
                     </table>
                 </div>
-                <div class="section-card">
+                <div class="section-card" id="unlocks-section">
                     <div class="section-title">🔔 <span id="unlocksTitle">Upcoming Unlocks</span></div>
                     <div id="unlocksList"><div class="loading">Loading...</div></div>
                 </div>
             </div>
             <div>
-                <div class="section-card">
+                <div class="section-card" id="narratives-section">
                     <div class="section-title">🔥 <span id="narrativesTitle">Hot Narratives</span></div>
                     <div class="narrative-grid" id="narrativesList"><div class="loading">Loading...</div></div>
                 </div>
@@ -389,7 +389,7 @@
             </div>
         </div>
         
-        <div class="section-card whale-section">
+        <div class="section-card whale-section" id="whale-section">
             <div class="section-title">🐋 <span id="whaleTitle">Whale Tracking</span></div>
             <div class="whale-tabs">
                 <button class="whale-tab active" onclick="showWhaleTab('tx')" id="tabTx">Large Tx</button>
@@ -622,6 +622,13 @@
         function getClass(p) { return (!p || p >= 0) ? 'up' : 'down'; }
         function formatTime(ts) { const d = (Date.now() - ts) / 1000 / 60; if (d < 60) return Math.floor(d) + 'm ago'; if (d < 1440) return Math.floor(d / 60) + 'h ago'; return Math.floor(d / 1440) + 'd ago'; }
         function stripHtml(h) { return h?.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() || ''; }
+        
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
         
         document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchNews(); });
         document.getElementById('aiInput').addEventListener('keypress', e => { if (e.key === 'Enter') askAI(); });
