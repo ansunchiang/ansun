@@ -5,7 +5,6 @@
 
 const axios = require('axios');
 const Parser = require('rss-parser');
-const iconv = require('iconv-lite');
 const NodeCache = require('node-cache');
 
 const parser = new Parser();
@@ -19,13 +18,16 @@ const RSS_SOURCES = {
     { name: 'CoinDesk', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', lang: 'en' },
     { name: 'CoinTelegraph', url: 'https://cointelegraph.com/rss', lang: 'en' },
     { name: 'BitcoinMagazine', url: 'https://bitcoinmagazine.com/.rss', lang: 'en' },
-    { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/', lang: 'en' }
+    { name: 'CryptoSlate', url: 'https://cryptoslate.com/feed/', lang: 'en' },
+    { name: 'Decrypt', url: 'https://decrypt.co/feed', lang: 'en' }
   ],
+  // 备用：使用英文源（国内RSS访问受限）
   zh: [
-    { name: '金色财经', url: 'https://www.jinse.cn/feed', lang: 'zh' },
-    { name: '巴比特', url: 'https://www.8btc.com/feed', lang: 'zh' },
-    { name: '链节点', url: 'https://www.chainnode.com/feed', lang: 'zh' },
-    { name: 'Odaily', url: 'https://www.odaily.news/feed', lang: 'zh' }
+    { name: 'CoinDesk中文', url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', lang: 'en' },
+    { name: 'CoinTelegraph中文', url: 'https://cointelegraph.com/rss', lang: 'en' },
+    { name: 'CryptoSlate中文', url: 'https://cryptoslate.com/feed/', lang: 'en' },
+    { name: 'Decrypt中文', url: 'https://decrypt.co/feed', lang: 'en' },
+    { name: 'News.Bitcoin.com', url: 'https://news.bitcoin.com/feed/', lang: 'en' }
   ]
 };
 
@@ -53,7 +55,7 @@ function formatNews(items, source) {
     content: (item.contentSnippet || item.content || item.description || '').slice(0, 500),
     timestamp: item.pubDate ? new Date(item.pubDate).getTime() : Date.now(),
     source: source,
-    lang: RSS_SOURCES.en.some(s => s.name === source) ? 'en' : 'zh'
+    lang: 'en'
   })).filter(item => item.title && item.link);
 }
 
@@ -94,7 +96,7 @@ async function getENNews() {
 }
 
 /**
- * 获取中文新闻
+ * 获取中文新闻（备用：使用英文源）
  */
 async function getZHNews() {
   const cacheKey = 'news_zh';
@@ -104,7 +106,7 @@ async function getZHNews() {
     return cached;
   }
   
-  console.log(`[抓取中] 中文新闻...`);
+  console.log(`[抓取中] 中文新闻(备用源)...`);
   const allNews = [];
   
   for (const source of RSS_SOURCES.zh) {
@@ -151,26 +153,11 @@ async function getNews({ lang = 'en', limit = 30, source, category }) {
 }
 
 /**
- * 按用户语言获取新闻（混合）
+ * 按用户语言获取新闻
  */
 async function getNewsByUserLang(userLang) {
-  const isAsian = ['zh', 'ja', 'ko'].includes(userLang);
-  const primaryLang = isAsian ? 'zh' : 'en';
-  const secondaryLang = isAsian ? 'en' : 'zh';
-  
-  const primaryNews = primaryLang === 'zh' ? await getZHNews() : await getENNews();
-  const secondaryNews = secondaryLang === 'zh' ? await getZHNews() : await getENNews();
-  
-  // 80%主要语言 + 20%次要语言
-  const primaryLimit = 24;
-  const secondaryLimit = 6;
-  
-  const combined = [
-    ...primaryNews.slice(0, primaryLimit),
-    ...secondaryNews.slice(0, secondaryLimit)
-  ];
-  
-  return combined.sort((a, b) => b.timestamp - a.timestamp);
+  // 中文用户：100%英文新闻（RSS访问受限）
+  return await getENNews();
 }
 
 /**
@@ -178,19 +165,10 @@ async function getNewsByUserLang(userLang) {
  */
 async function searchNews(keyword, limit = 20, lang = 'all') {
   const results = [];
-  
-  if (lang === 'all' || lang === 'en') {
-    const enNews = await getENNews();
-    results.push(...enNews);
-  }
-  
-  if (lang === 'all' || lang === 'zh') {
-    const zhNews = await getZHNews();
-    results.push(...zhNews);
-  }
+  const enNews = await getENNews();
   
   const keywordLower = keyword.toLowerCase();
-  const filtered = results.filter(item => 
+  const filtered = enNews.filter(item => 
     item.title.toLowerCase().includes(keywordLower) ||
     item.content.toLowerCase().includes(keywordLower)
   );
@@ -199,10 +177,10 @@ async function searchNews(keyword, limit = 20, lang = 'all') {
 }
 
 /**
- * 获取热门新闻（最新5条）
+ * 获取热门新闻
  */
 async function getHotNews(limit = 10, lang = 'all') {
-  const news = await getNews({ lang, limit: 50 });
+  const news = await getENNews();
   return news.slice(0, limit);
 }
 
@@ -217,7 +195,7 @@ function getNewsSources() {
 }
 
 /**
- * 定时预加载（每5分钟刷新一次）
+ * 定时预加载
  */
 function startCacheScheduler() {
   console.log('📰 启动新闻缓存定时任务...');
@@ -242,16 +220,8 @@ function getCacheStatus() {
   const zhStatus = newsCache.get('news_zh');
   
   return {
-    en: {
-      cached: !!enStatus,
-      count: enStatus?.length || 0,
-      ttl: newsCache.getTtl('news_en') ? Math.round((newsCache.getTtl('news_en') - Date.now()) / 1000) : 0
-    },
-    zh: {
-      cached: !!zhStatus,
-      count: zhStatus?.length || 0,
-      ttl: newsCache.getTtl('news_zh') ? Math.round((newsCache.getTtl('news_zh') - Date.now()) / 1000) : 0
-    }
+    en: { cached: !!enStatus, count: enStatus?.length || 0 },
+    zh: { cached: !!zhStatus, count: zhStatus?.length || 0 }
   };
 }
 
