@@ -15,13 +15,9 @@
         header { text-align: center; padding: 40px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
         header h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(90deg, #00d4ff, #7b2cbf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { color: rgba(255,255,255,0.7); }
-        .lang-switch {
-            position: absolute; top: 20px; right: 20px;
-        }
-        .lang-switch select {
-            padding: 8px 15px; border-radius: 20px; border: none;
-            background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;
-        }
+        .lang-switch { position: absolute; top: 20px; right: 20px; }
+        .lang-switch select { padding: 8px 15px; border-radius: 20px; border: none; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; }
+        .lang-switch select option { background: #1a1a2e; }
         .search-box { display: flex; gap: 10px; max-width: 600px; margin: 30px auto; }
         .search-box input { flex: 1; padding: 15px 20px; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1rem; }
         .search-box input:focus { outline: none; background: rgba(255,255,255,0.15); }
@@ -35,8 +31,9 @@
         .news-card h3 { font-size: 1.1rem; margin-bottom: 10px; line-height: 1.4; }
         .news-card h3 a { color: #fff; text-decoration: none; }
         .news-card h3 a:hover { color: #00d4ff; }
-        .news-meta { display: flex; gap: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+        .news-meta { display: flex; gap: 15px; font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 10px; flex-wrap: wrap; }
         .news-source { background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; }
+        .news-lang { padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; background: rgba(255,255,255,0.2); }
         .ai-section { margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; }
         .ai-chat { display: flex; flex-direction: column; gap: 15px; max-height: 400px; overflow-y: auto; }
         .ai-chat .user { align-self: flex-end; background: linear-gradient(90deg, #00d4ff, #7b2cbf); padding: 15px 20px; border-radius: 20px; max-width: 80%; }
@@ -71,9 +68,8 @@
         </div>
         <div class="tabs">
             <button class="tab active" onclick="showCategory('all')" id="tabAll">All</button>
-            <button class="tab" onclick="showCategory('新闻')" id="tabNews">News</button>
-            <button class="tab" onclick="showCategory('BTC')" id="tabBtc">BTC</button>
-            <button class="tab" onclick="showCategory('综合')" id="tabGeneral">General</button>
+            <button class="tab" onclick="showCategory('news')" id="tabNews">News</button>
+            <button class="tab" onclick="showCategory('btc')" id="tabBtc">BTC</button>
             <button class="tab" onclick="refreshNews()" id="tabRefresh">🔄 Refresh</button>
         </div>
         <div id="newsContainer" class="news-grid">
@@ -96,12 +92,11 @@
         </footer>
     </div>
     <script>
-        // 语言数据
         const i18n = {
             en: {
                 title: "Ansun 🚀", subtitle: "Crypto News AI Aggregator - Information only, no investment advice",
                 searchPlaceholder: "Search crypto news...", searchBtn: "Search",
-                tabs: { all: "All", news: "News", btc: "BTC", general: "General", refresh: "🔄 Refresh" },
+                tabs: { all: "All", news: "News", btc: "BTC", refresh: "🔄 Refresh" },
                 aiTitle: "🤖 AI Assistant", aiSubtitle: "Answering crypto knowledge questions only, no investment advice",
                 aiHello: "Hello! I'm Ansun AI assistant. Feel free to ask me anything about crypto!",
                 askPlaceholder: "Ask your question...", askBtn: "Ask",
@@ -112,7 +107,7 @@
             zh: {
                 title: "Ansun 🚀", subtitle: "币圈资讯AI聚合平台 - 只做资讯，不给投资建议",
                 searchPlaceholder: "搜索币圈新闻...", searchBtn: "搜索",
-                tabs: { all: "全部", news: "新闻", btc: "BTC", general: "综合", refresh: "🔄 刷新" },
+                tabs: { all: "全部", news: "新闻", btc: "BTC", refresh: "🔄 刷新" },
                 aiTitle: "🤖 AI 智能助手", aiSubtitle: "只回答币圈知识问题，不提供投资建议",
                 aiHello: "你好！我是Ansun AI助手，有什么币圈相关的问题可以问我～",
                 askPlaceholder: "输入你的问题...", askBtn: "提问",
@@ -123,57 +118,57 @@
             ja: {
                 title: "Ansun 🚀", subtitle: "クリプトニュースAIアグリゲーター - 情報のみ、投資アドバイスなし",
                 searchPlaceholder: "クリプトニュースを検索...", searchBtn: "検索",
-                tabs: { all: "すべて", news: "ニュース", btc: "BTC", general: "一般", refresh: "🔄 更新" },
+                tabs: { all: "すべて", news: "ニュース", btc: "BTC", refresh: "🔄 更新" },
                 aiTitle: "🤖 AIアシスタント", aiSubtitle: "クリプトの知識質問のみに回答、投資アドバイスなし",
-                aiHello: "こんにちは！私はAnsun AIアシスタントです。クリプト関連の質問があれば何でも聞いてください！",
+                aiHello: "こんにちは！私はAnsun AIアシスタントです。",
                 askPlaceholder: "質問を入力...", askBtn: "質問",
-                copyright: "© 2026 Ansun - クリプトニュースAIアグリゲーター",
-                disclaimer: "情報のみ、投資アドバイスなし",
-                loading: "読み込み中...", noNews: "ニュースが見つかりません", error: "エラーが発生しました", thinking: "考え中..."
+                copyright: "© 2026 Ansun",
+                disclaimer: "情報のみ",
+                loading: "読み込み中...", noNews: "ニュースが見つかりません", error: "エラー", thinking: "考え中..."
             },
             ko: {
-                title: "Ansun 🚀", subtitle: "암호화폐 뉴스 AI 집계 플랫폼 - 정보만 제공, 투자 조언 없음",
+                title: "Ansun 🚀", subtitle: "암호화폐 뉴스 AI - 정보만 제공",
                 searchPlaceholder: "암호화폐 뉴스 검색...", searchBtn: "검색",
-                tabs: { all: "전체", news: "뉴스", btc: "BTC", general: "일반", refresh: "🔄 새로고침" },
-                aiTitle: "🤖 AI 어시스턴트", aiSubtitle: "암호화폐 지식 질문에만 답변, 투자 조언 없음",
-                aiHello: "안녕하세요! 저는 Ansun AI 어시스턴트입니다. 암호화폐 관련 질문이 있으시면 무엇이든 물어보세요!",
+                tabs: { all: "전체", news: "뉴스", btc: "BTC", refresh: "🔄 새로고침" },
+                aiTitle: "🤖 AI 어시스턴트", aiSubtitle: "암호화폐 질문에 답변",
+                aiHello: "안녕하세요! Ansun AI입니다.",
                 askPlaceholder: "질문을 입력하세요...", askBtn: "질문",
-                copyright: "© 2026 Ansun - 암호화폐 뉴스 AI 집계 플랫폼",
-                disclaimer: "정보만 제공, 투자 조언 없음",
-                loading: "로딩 중...", noNews: "관련 뉴스를 찾을 수 없습니다", error: "오류가 발생했습니다", thinking: "생각 중..."
+                copyright: "© 2026 Ansun",
+                disclaimer: "정보만 제공",
+                loading: "로딩 중...", noNews: "뉴스 없음", error: "오류", thinking: "생각 중..."
             },
             pt: {
-                title: "Ansun 🚀", subtitle: "Agregador de Notícias de Criptomoedas - Apenas informações, sem conselhos de investimento",
-                searchPlaceholder: "Pesquisar notícias de criptomoedas...", searchBtn: "Pesquisar",
-                tabs: { all: "Todos", news: "Notícias", btc: "BTC", general: "Geral", refresh: "🔄 Atualizar" },
-                aiTitle: "🤖 Assistente de IA", aiSubtitle: "Respondendo apenas perguntas sobre conhecimento de criptomoedas, sem conselhos de investimento",
-                aiHello: "Olá! Sou o assistente de IA Ansun. Sinta-se à vontade para perguntar qualquer coisa sobre criptomoedas!",
+                title: "Ansun 🚀", subtitle: "Notícias de Criptomoedas",
+                searchPlaceholder: "Pesquisar...", searchBtn: "Pesquisar",
+                tabs: { all: "Todos", news: "Notícias", btc: "BTC", refresh: "🔄 Atualizar" },
+                aiTitle: "🤖 Assistente IA", aiSubtitle: "Pergunte sobre crypto",
+                aiHello: "Olá! Sou o assistente Ansun.",
                 askPlaceholder: "Digite sua pergunta...", askBtn: "Perguntar",
-                copyright: "© 2026 Ansun - Agregador de Notícias de Criptomoedas",
-                disclaimer: "Apenas informações, sem conselhos de investimento",
-                loading: "Carregando...", noNews: "Nenhuma notícia encontrada", error: "Algo deu errado", thinking: "Pensando..."
+                copyright: "© 2026 Ansun",
+                disclaimer: "Informações apenas",
+                loading: "Carregando...", noNews: "Sem notícias", error: "Erro", thinking: "Pensando..."
             },
             es: {
-                title: "Ansun 🚀", subtitle: "Agregador de Noticias de Criptomonedas - Solo información, sin consejos de inversión",
-                searchPlaceholder: "Buscar noticias de criptomonedas...", searchBtn: "Buscar",
-                tabs: { all: "Todos", news: "Noticias", btc: "BTC", general: "General", refresh: "🔄 Actualizar" },
-                aiTitle: "🤖 Asistente de IA", aiSubtitle: "Respondiendo solo preguntas de conocimiento sobre criptomonedas, sin consejos de inversión",
-                aiHello: "¡Hola! Soy el asistente de IA Ansun. ¡Siéntete libre de preguntarme cualquier cosa sobre criptomonedas!",
+                title: "Ansun 🚀", subtitle: "Noticias de Criptomonedas",
+                searchPlaceholder: "Buscar...", searchBtn: "Buscar",
+                tabs: { all: "Todos", news: "Noticias", btc: "BTC", refresh: "🔄 Actualizar" },
+                aiTitle: "🤖 Asistente IA", aiSubtitle: "Preguntas sobre crypto",
+                aiHello: "¡Hola! Soy el asistente Ansun.",
                 askPlaceholder: "Ingresa tu pregunta...", askBtn: "Preguntar",
-                copyright: "© 2026 Ansun - Agregador de Noticias de Criptomonedas",
-                disclaimer: "Solo información, sin consejos de inversión",
-                loading: "Cargando...", noNews: "No se encontraron noticias", error: "Algo salió mal", thinking: "Pensando..."
+                copyright: "© 2026 Ansun",
+                disclaimer: "Información solo",
+                loading: "Cargando...", noNews: "Sin noticias", error: "Error", thinking: "Pensando..."
             },
             fr: {
-                title: "Ansun 🚀", subtitle: "Agrégateur d'Actualités Crypto - Informations uniquement, aucun conseil d'investissement",
-                searchPlaceholder: "Rechercher des actualités crypto...", searchBtn: "Rechercher",
-                tabs: { all: "Tout", news: "Actualités", btc: "BTC", general: "Général", refresh: "🔄 Actualiser" },
-                aiTitle: "🤖 Assistant IA", aiSubtitle: "Répondant uniquement aux questions sur les connaissances crypto, aucun conseil d'investissement",
-                aiHello: "Bonjour ! Je suis l'assistant IA Ansun. N'hésitez pas à me poser des questions sur les crypto !",
-                askPlaceholder: "Entrez votre question...", askBtn: "Poser une question",
-                copyright: "© 2026 Ansun - Agrégateur d'Actualités Crypto",
-                disclaimer: "Informations uniquement, aucun conseil d'investissement",
-                loading: "Chargement...", noNews: "Aucune actualité trouvée", error: "Une erreur s'est produite", thinking: "Réflexion..."
+                title: "Ansun 🚀", subtitle: "Actualités Crypto",
+                searchPlaceholder: "Rechercher...", searchBtn: "Rechercher",
+                tabs: { all: "Tout", news: "Actualités", btc: "BTC", refresh: "🔄 Actualiser" },
+                aiTitle: "🤖 Assistant IA", aiSubtitle: "Questions sur crypto",
+                aiHello: "Bonjour! Je suis l'assistant Ansun.",
+                askPlaceholder: "Entrez votre question...", askBtn: "Poser",
+                copyright: "© 2026 Ansun",
+                disclaimer: "Informations uniquement",
+                loading: "Chargement...", noNews: "Pas d'actualités", error: "Erreur", thinking: "Réflexion..."
             }
         };
 
@@ -181,10 +176,9 @@
         let currentCategory = 'all';
         const API_BASE = '/api';
 
-        // 初始化语言
         function initLanguage() {
             const browserLang = navigator.language || navigator.userLanguage;
-            const langMap = { 'zh': 'zh', 'zh-CN': 'zh', 'zh-TW': 'zh', 'ja': 'ja', 'ja-JP': 'ja', 'ko': 'ko', 'ko-KR': 'ko', 'pt': 'pt', 'pt-BR': 'pt', 'pt-PT': 'pt', 'es': 'es', 'es-ES': 'es', 'es-MX': 'es', 'fr': 'fr', 'fr-FR': 'fr' };
+            const langMap = { 'zh': 'zh', 'ja': 'ja', 'ko': 'ko', 'pt': 'pt', 'es': 'es', 'fr': 'fr' };
             currentLang = langMap[browserLang] || 'en';
             document.getElementById('langSelect').value = currentLang;
             applyLanguage(currentLang);
@@ -199,7 +193,6 @@
             document.getElementById('tabAll').textContent = t.tabs.all;
             document.getElementById('tabNews').textContent = t.tabs.news;
             document.getElementById('tabBtc').textContent = t.tabs.btc;
-            document.getElementById('tabGeneral').textContent = t.tabs.general;
             document.getElementById('tabRefresh').textContent = t.tabs.refresh;
             document.getElementById('aiTitle').textContent = t.aiTitle;
             document.getElementById('aiSubtitle').textContent = t.aiSubtitle;
@@ -211,14 +204,19 @@
             document.documentElement.lang = lang;
         }
 
-        function changeLanguage(lang) { currentLang = lang; applyLanguage(lang); }
+        function changeLanguage(lang) { currentLang = lang; applyLanguage(lang); loadNews(currentCategory); }
 
         async function loadNews(category = 'all') {
             const container = document.getElementById('newsContainer');
             const t = i18n[currentLang];
             container.innerHTML = `<div class="loading">${t.loading}</div>`;
+            
+            // 根据语言选择新闻源
+            const zhLangs = ['zh', 'ja', 'ko'];
+            const apiLang = zhLangs.includes(currentLang) ? 'zh' : 'en';
+            const url = `${API_BASE}/news/${apiLang}?limit=30`;
+            
             try {
-                const url = category === 'all' ? `${API_BASE}/news?limit=30` : `${API_BASE}/news?limit=30&category=${category}`;
                 const res = await fetch(url);
                 const data = await res.json();
                 if (data.success) { renderNews(data.data); } else { container.innerHTML = `<div class="loading">${t.error}</div>`; }
@@ -231,7 +229,11 @@
             if (news.length === 0) { container.innerHTML = `<div class="loading">${t.noNews}</div>`; return; }
             container.innerHTML = news.map(item => `
                 <div class="news-card">
-                    <div class="news-meta"><span class="news-source">${item.source}</span><span>${formatTime(item.timestamp)}</span></div>
+                    <div class="news-meta">
+                        <span class="news-source">${item.source}</span>
+                        <span class="news-lang">${item.lang === 'zh' ? '🇨🇳 中文' : '🇺🇸 EN'}</span>
+                        <span>${formatTime(item.timestamp)}</span>
+                    </div>
                     <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
                     <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.5;">${stripHtml(item.content).slice(0, 150)}...</p>
                 </div>`).join('');
@@ -240,9 +242,8 @@
         function showCategory(category) {
             currentCategory = category;
             document.querySelectorAll('.tab').forEach(tab => { tab.classList.remove('active'); });
-            const tabTexts = i18n[currentLang].tabs;
-            const tabMap = { 'all': 'tabAll', '新闻': 'tabNews', 'BTC': 'tabBtc', '综合': 'tabGeneral' };
-            document.getElementById(tabMap[category]).classList.add('active');
+            const tabMap = { 'all': 'tabAll', 'news': 'tabNews', 'btc': 'tabBtc' };
+            if (tabMap[category]) document.getElementById(tabMap[category]).classList.add('active');
             loadNews(category);
         }
 
@@ -252,13 +253,14 @@
             const keyword = document.getElementById('searchInput').value.trim();
             if (!keyword) return;
             const container = document.getElementById('newsContainer');
-            const t = i18n[currentLang];
-            container.innerHTML = `<div class="loading">${t.loading}</div>`;
+            container.innerHTML = `<div class="loading">${i18n[currentLang].loading}</div>`;
             try {
-                const res = await fetch(`${API_BASE}/news/search?keyword=${encodeURIComponent(keyword)}`);
+                const zhLangs = ['zh', 'ja', 'ko'];
+                const apiLang = zhLangs.includes(currentLang) ? 'zh' : 'en';
+                const res = await fetch(`${API_BASE}/news/${apiLang}/search?keyword=${encodeURIComponent(keyword)}`);
                 const data = await res.json();
                 if (data.success) { renderNews(data.data); }
-            } catch (error) { container.innerHTML = `<div class="loading">${t.error}</div>`; }
+            } catch (error) { container.innerHTML = `<div class="loading">${i18n[currentLang].error}</div>`; }
         }
 
         async function askAI() {

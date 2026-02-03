@@ -4,26 +4,93 @@
 
 const express = require('express');
 const router = express.Router();
-const { getNews, getHotNews, searchNews, getNewsBySource, getNewsSources } = require('../services/news');
+const { getNews, getNewsByUserLang, getHotNews, searchNews, getNewsSources } = require('../services/news');
 const { summarizeNews } = require('../services/ai');
 
 /**
  * GET /api/news
  * 获取新闻列表
+ * query: limit, source, category, lang
  */
 router.get('/', async (req, res) => {
   try {
-    const { limit, source, category } = req.query;
+    const { limit, source, category, lang } = req.query;
+    
+    // 如果用户指定了语言，使用该语言
+    let news;
+    if (lang && ['en', 'zh', 'all'].includes(lang)) {
+      news = await getNews({
+        lang,
+        limit: limit ? parseInt(limit) : 30,
+        source,
+        category
+      });
+    } else {
+      // 默认根据用户偏好混合（中英文）
+      news = await getNewsByUserLang(lang || 'en');
+    }
+    
+    res.json({
+      success: true,
+      data: news,
+      count: news.length,
+      lang: lang || 'mixed'
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/news/en
+ * 获取英文新闻
+ */
+router.get('/en', async (req, res) => {
+  try {
+    const { limit, category } = req.query;
     const news = await getNews({
-      limit: limit ? parseInt(limit) : 20,
-      source,
+      lang: 'en',
+      limit: limit ? parseInt(limit) : 30,
       category
     });
     
     res.json({
       success: true,
       data: news,
-      count: news.length
+      count: news.length,
+      lang: 'en'
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
+ * GET /api/news/zh
+ * 获取中文新闻
+ */
+router.get('/zh', async (req, res) => {
+  try {
+    const { limit, category } = req.query;
+    const news = await getNews({
+      lang: 'zh',
+      limit: limit ? parseInt(limit) : 30,
+      category
+    });
+    
+    res.json({
+      success: true,
+      data: news,
+      count: news.length,
+      lang: 'zh'
     });
     
   } catch (error) {
@@ -41,7 +108,8 @@ router.get('/', async (req, res) => {
 router.get('/hot', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
-    const news = await getHotNews(limit);
+    const { lang } = req.query;
+    const news = await getHotNews(limit, lang || 'all');
     
     res.json({
       success: true,
@@ -63,7 +131,7 @@ router.get('/hot', async (req, res) => {
  */
 router.get('/search', async (req, res) => {
   try {
-    const { keyword, limit } = req.query;
+    const { keyword, limit, lang } = req.query;
     
     if (!keyword) {
       return res.status(400).json({
@@ -72,7 +140,7 @@ router.get('/search', async (req, res) => {
       });
     }
     
-    const news = await searchNews(keyword, limit ? parseInt(limit) : 20);
+    const news = await searchNews(keyword, limit ? parseInt(limit) : 20, lang || 'all');
     
     res.json({
       success: true,
@@ -116,7 +184,8 @@ router.get('/sources', (req, res) => {
  */
 router.get('/summary', async (req, res) => {
   try {
-    const news = await getNews({ limit: 10 });
+    const { lang } = req.query;
+    const news = await getNews({ lang: lang || 'all', limit: 10 });
     const result = await summarizeNews(news);
     
     res.json({
