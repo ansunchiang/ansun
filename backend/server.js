@@ -13,6 +13,7 @@ const aiRoutes = require('./routes/ai');
 const priceRoutes = require('./routes/price');
 const featuresRoutes = require('./routes/features');
 const chainRoutes = require('./routes/chain');
+const signalRoutes = require('./routes/signal');
 const { startCacheScheduler, getCacheStatus } = require('./services/news');
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/price', priceRoutes);
 app.use('/api/features', featuresRoutes);
 app.use('/api/chain', chainRoutes);
+app.use('/api/signal', signalRoutes);
 
 // 健康检查 + 缓存状态
 app.get('/api/health', (req, res) => {
