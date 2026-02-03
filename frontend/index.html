@@ -13,73 +13,52 @@
             min-height: 100vh;
             line-height: 1.6;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         
         /* 头部 */
         header {
-            text-align: center;
-            padding: 32px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
             border-bottom: 1px solid #30363d;
             margin-bottom: 24px;
-            position: relative;
         }
         header h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(135deg, #58a6ff, #8b949e);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        header p { color: #8b949e; font-size: 0.9rem; margin-top: 4px; }
-        
-        .lang-switch {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-        }
-        .lang-switch select {
-            padding: 6px 12px;
-            border-radius: 6px;
+        header p { color: #8b949e; font-size: 0.9rem; }
+        .lang-select {
+            padding: 8px 12px;
+            border-radius: 8px;
             border: 1px solid #30363d;
             background: #21262d;
             color: #c9d1d9;
             cursor: pointer;
-            font-size: 0.85rem;
         }
         
-        /* 标签导航 */
-        .nav-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+        /* 主内容区 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
-        .nav-tab {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
-            background: #21262d;
-            color: #8b949e;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .nav-tab:hover { border-color: #58a6ff; color: #58a6ff; }
-        .nav-tab.active {
-            background: #1f6feb;
-            border-color: #1f6feb;
-            color: #fff;
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
         }
         
-        /* 卡片通用 */
-        .card {
+        /* 左侧：行情 */
+        .market-section {
             background: #161b22;
             border: 1px solid #30363d;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 20px;
         }
-        .card-title {
+        .section-title {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 16px;
@@ -88,35 +67,32 @@
             gap: 8px;
         }
         
-        /* 行情卡片 */
+        /* 行情头部 */
         .market-header {
             display: flex;
-            align-items: center;
             gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
-        .market-item {
+        .market-pill {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 16px;
+            padding: 10px 16px;
             background: #21262d;
-            border-radius: 8px;
+            border-radius: 10px;
         }
-        .market-item .label { color: #8b949e; font-size: 0.85rem; }
-        .market-item .value { font-weight: 600; }
-        .market-item .up { color: #3fb950; }
-        .market-item .down { color: #f85149; }
+        .market-pill .label { color: #8b949e; font-size: 0.85rem; }
+        .market-pill .value { font-weight: 600; font-size: 0.95rem; }
+        .market-pill .change { font-size: 0.85rem; font-weight: 500; padding: 2px 6px; border-radius: 4px; }
+        .up { color: #3fb950; background: rgba(63, 185, 80, 0.2); }
+        .down { color: #f85149; background: rgba(248, 81, 73, 0.2); }
         
         /* 币种表格 */
-        .coin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .coin-table { width: 100%; border-collapse: collapse; }
         .coin-table th {
             text-align: left;
-            padding: 12px 8px;
+            padding: 10px 8px;
             color: #8b949e;
             font-size: 0.8rem;
             font-weight: 500;
@@ -127,80 +103,90 @@
             border-bottom: 1px solid #21262d;
         }
         .coin-table tr:hover td { background: #21262d; }
-        
-        .coin-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .coin-info img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-        }
-        .coin-info .name { font-weight: 600; }
-        .coin-info .symbol { color: #8b949e; font-size: 0.85rem; }
+        .coin-info { display: flex; align-items: center; gap: 10px; }
+        .coin-info img { width: 28px; height: 28px; border-radius: 50%; }
+        .coin-info .name { font-weight: 600; font-size: 0.9rem; }
+        .coin-info .symbol { color: #8b949e; font-size: 0.8rem; }
         .coin-price { font-weight: 600; font-size: 0.95rem; }
-        .coin-change { 
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
+        .coin-change { font-size: 0.85rem; font-weight: 500; padding: 3px 8px; border-radius: 4px; }
+        .coin-rank { color: #8b949e; font-size: 0.85rem; }
+        
+        /* 右侧：资讯 */
+        .news-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 16px;
+            padding: 20px;
         }
-        .coin-change.up { background: rgba(63, 185, 80, 0.2); color: #3fb950; }
-        .coin-change.down { background: rgba(248, 81, 73, 0.2); color: #f85149; }
-        .coin-change.neutral { background: rgba(139, 148, 158, 0.2); color: #8b949e; }
-        .coin-rank {
-            color: #8b949e;
-            font-size: 0.85rem;
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .search-box {
+            display: flex;
+            gap: 8px;
+        }
+        .search-box input {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            background: #21262d;
+            color: #c9d1d9;
+            font-size: 0.9rem;
+            width: 180px;
+        }
+        .search-box input:focus { outline: none; border-color: #58a6ff; }
+        .search-box button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            background: #1f6feb;
+            color: #fff;
+            cursor: pointer;
         }
         
         /* 新闻卡片 */
         .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         .news-card {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 16px;
+            background: #21262d;
+            border-radius: 10px;
+            padding: 14px;
             transition: all 0.2s;
+            cursor: pointer;
         }
-        .news-card:hover {
-            border-color: #58a6ff;
-            transform: translateY(-2px);
-        }
+        .news-card:hover { background: #30363d; }
         .news-meta {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .news-source {
             background: linear-gradient(135deg, #238636, #2ea043);
             padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #fff;
         }
-        .news-time {
-            color: #8b949e;
-            font-size: 0.8rem;
-        }
-        .news-card h3 {
+        .news-time { color: #8b949e; font-size: 0.8rem; }
+        .news-card h4 {
             font-size: 0.95rem;
             font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 8px;
+            line-height: 1.4;
+            margin-bottom: 6px;
         }
-        .news-card h3 a {
+        .news-card h4 a {
             color: #c9d1d9;
             text-decoration: none;
         }
-        .news-card h3 a:hover { color: #58a6ff; }
+        .news-card h4 a:hover { color: #58a6ff; }
         .news-card p {
             font-size: 0.85rem;
             color: #8b949e;
@@ -216,24 +202,19 @@
             border: 1px solid #30363d;
             border-radius: 16px;
             padding: 20px;
+            margin-top: 24px;
         }
         .ai-chat {
             background: #0d1117;
             border-radius: 10px;
-            padding: 16px;
-            min-height: 150px;
-            max-height: 250px;
+            padding: 14px;
+            min-height: 120px;
+            max-height: 200px;
             overflow-y: auto;
             margin-bottom: 12px;
         }
-        .ai-message {
-            margin-bottom: 12px;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .ai-message { margin-bottom: 10px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .ai-message.assistant .bubble {
             background: #21262d;
             border: 1px solid #30363d;
@@ -254,10 +235,7 @@
             max-width: 90%;
             margin-left: auto;
         }
-        .ai-input-group {
-            display: flex;
-            gap: 8px;
-        }
+        .ai-input-group { display: flex; gap: 8px; }
         .ai-input-group input {
             flex: 1;
             padding: 12px 16px;
@@ -265,12 +243,8 @@
             border: 1px solid #30363d;
             background: #0d1117;
             color: #c9d1d9;
-            font-size: 0.9rem;
         }
-        .ai-input-group input:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
+        .ai-input-group input:focus { outline: none; border-color: #58a6ff; }
         .ai-input-group button {
             padding: 12px 24px;
             border-radius: 10px;
@@ -281,106 +255,47 @@
             cursor: pointer;
         }
         
-        /* 搜索 */
-        .search-box {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .search-box input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 10px;
-            border: 1px solid #30363d;
-            background: #161b22;
-            color: #c9d1d9;
-            font-size: 0.95rem;
-        }
-        .search-box input:focus {
-            outline: none;
-            border-color: #58a6ff;
-        }
-        .search-box button {
-            padding: 12px 24px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, #1f6feb, #388bfd);
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
         /* 加载 */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #8b949e;
-        }
+        .loading { text-align: center; padding: 30px; color: #8b949e; }
         .loading::after {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #30363d;
-            border-top-color: #58a6ff;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-left: 8px;
-            vertical-align: middle;
+            content: ''; display: inline-block; width: 18px; height: 18px;
+            border: 2px solid #30363d; border-top-color: #58a6ff;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+            margin-left: 8px; vertical-align: middle;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         /* 页脚 */
         footer {
             text-align: center;
-            padding: 32px 20px;
+            padding: 24px;
             border-top: 1px solid #30363d;
             color: #8b949e;
             font-size: 0.85rem;
             margin-top: 32px;
-        }
-        
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .coin-table .hide-mobile { display: none; }
-            .market-header { gap: 8px; }
-            .market-item { padding: 6px 10px; font-size: 0.85rem; }
-            .news-grid { grid-template-columns: 1fr; }
-            header h1 { font-size: 1.6rem; }
-            .lang-switch { position: static; margin-bottom: 12px; text-align: center; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="lang-switch">
-                <select id="langSelect" onchange="changeLanguage(this.value)">
-                    <option value="en">🇺🇸 English</option>
-                    <option value="zh">🇨🇳 中文</option>
-                </select>
+            <div>
+                <h1>Ansun</h1>
+                <p> Crypto News & Market Data</p>
             </div>
-            <h1 id="pageTitle">Ansun</h1>
-            <p id="pageSubtitle">Crypto News & Market Data</p>
+            <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="en">🇺🇸 English</option>
+                <option value="zh">🇨🇳 中文</option>
+            </select>
         </header>
         
-        <!-- 导航 -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="showTab('market')" id="tabMarket">📊 Market</button>
-            <button class="nav-tab" onclick="showTab('news')" id="tabNews">📰 News</button>
-            <button class="nav-tab" onclick="showTab('ai')" id="tabAI">🤖 AI</button>
-        </div>
-        
-        <!-- 行情页面 -->
-        <div id="page-market">
-            <div class="card">
-                <div class="card-title">💹 Live Market</div>
+        <div class="main-grid">
+            <!-- 左侧：行情 -->
+            <div class="market-section">
+                <div class="section-title">📊 <span id="marketTitle">Live Market</span></div>
                 <div class="market-header" id="marketHeader">
-                    <div class="loading">Loading market data...</div>
+                    <div class="loading">Loading...</div>
                 </div>
-            </div>
-            
-            <div class="card">
                 <table class="coin-table">
                     <thead>
                         <tr>
@@ -388,74 +303,64 @@
                             <th>Coin</th>
                             <th>Price</th>
                             <th>24h</th>
-                            <th class="hide-mobile">7d</th>
-                            <th class="hide-mobile">Market Cap</th>
+                            <th>7d</th>
                         </tr>
                     </thead>
                     <tbody id="coinTable">
-                        <tr><td colspan="6" class="loading">Loading...</td></tr>
+                        <tr><td colspan="5" class="loading">Loading...</td></tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-        
-        <!-- 新闻页面 -->
-        <div id="page-news" style="display:none;">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search news..." onkeypress="if(event.key==='Enter')searchNews()">
-                <button onclick="searchNews()">🔍</button>
-            </div>
-            <div id="newsContainer" class="news-grid">
-                <div class="loading">Loading news...</div>
-            </div>
-        </div>
-        
-        <!-- AI页面 -->
-        <div id="page-ai" style="display:none;">
-            <div class="ai-section">
-                <div class="card-title">🤖 AI Assistant</div>
-                <div class="ai-chat" id="aiChat">
-                    <div class="ai-message assistant">
-                        <div class="bubble" id="aiHello">Hello! Ask me anything about crypto!</div>
+            
+            <!-- 右侧：资讯 -->
+            <div class="news-section">
+                <div class="news-header">
+                    <div class="section-title">📰 <span id="newsTitle">Latest News</span></div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search news...">
+                        <button onclick="searchNews()">🔍</button>
                     </div>
                 </div>
-                <div class="ai-input-group">
-                    <input type="text" id="aiInput" placeholder="Ask a question..." onkeypress="if(event.key==='Enter')askAI()">
-                    <button onclick="askAI()">Send</button>
+                <div class="news-grid" id="newsContainer">
+                    <div class="loading">Loading...</div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- AI助手 -->
+        <div class="ai-section">
+            <div class="section-title">🤖 <span id="aiTitle">AI Assistant</span></div>
+            <div class="ai-chat" id="aiChat">
+                <div class="ai-message assistant">
+                    <div class="bubble" id="aiHello">Hello! Ask me anything about crypto!</div>
+                </div>
+            </div>
+            <div class="ai-input-group">
+                <input type="text" id="aiInput" placeholder="Ask a question...">
+                <button onclick="askAI()">Send</button>
             </div>
         </div>
         
         <footer>
-            <p id="footerCopyright">© 2026 Ansun - Data from CoinGecko</p>
+            <span id="footerText">© 2026 Ansun - Data from CoinGecko</span>
         </footer>
     </div>
     
     <script>
         const i18n = {
             en: {
-                title: "Ansun", subtitle: "Crypto News & Market Data",
-                tabMarket: "📊 Market", tabNews: "📰 News", tabAI: "🤖 AI",
-                searchPlaceholder: "Search news...", searchBtn: "🔍",
-                aiTitle: "🤖 AI Assistant",
-                aiHello: "Hello! Ask me anything about crypto!",
-                askPlaceholder: "Ask a question...", askBtn: "Send",
-                copyright: "© 2026 Ansun - Data from CoinGecko",
+                marketTitle: "Live Market", newsTitle: "Latest News", aiTitle: "AI Assistant",
+                searchPlaceholder: "Search news...", aiHello: "Hello! Ask me anything about crypto!",
+                askPlaceholder: "Ask a question...", sendBtn: "Send", footer: "© 2026 Ansun - Data from CoinGecko",
                 loading: "Loading...", noNews: "No news found",
-                rank: "Rank", price: "Price", change24h: "24h", change7d: "7d", marketCap: "Market Cap",
-                up: "Up", down: "Down"
+                price: "Price", change24h: "24h", change7d: "7d"
             },
             zh: {
-                title: "Ansun", subtitle: "币圈资讯与行情",
-                tabMarket: "📊 行情", tabNews: "📰 资讯", tabAI: "🤖 AI助手",
-                searchPlaceholder: "搜索新闻...", searchBtn: "🔍",
-                aiTitle: "🤖 AI智能助手",
-                aiHello: "你好！有什么币圈问题可以问我～",
-                askPlaceholder: "输入问题...", askBtn: "发送",
-                copyright: "© 2026 Ansun - 数据来源 CoinGecko",
-                loading: "加载中...", noNews: "暂无新闻",
-                rank: "排名", price: "价格", change24h: "24h", change7d: "7天", marketCap: "市值",
-                up: "涨", down: "跌"
+                marketTitle: "实时行情", newsTitle: "最新资讯", aiTitle: "AI智能助手",
+                searchPlaceholder: "搜索资讯...", aiHello: "你好！有什么币圈问题可以问我～",
+                askPlaceholder: "输入问题...", sendBtn: "发送", footer: "© 2026 Ansun - 数据来源 CoinGecko",
+                loading: "加载中...", noNews: "暂无资讯",
+                price: "价格", change24h: "24h", change7d: "7天"
             }
         };
 
@@ -473,28 +378,19 @@
         
         function applyLanguage() {
             const t = i18n[currentLang];
-            document.getElementById('pageTitle').textContent = t.title;
-            document.getElementById('pageSubtitle').textContent = t.subtitle;
-            document.getElementById('tabMarket').textContent = t.tabMarket;
-            document.getElementById('tabNews').textContent = t.tabNews;
-            document.getElementById('tabAI').textContent = t.tabAI;
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('marketTitle').textContent = t.marketTitle;
+            document.getElementById('newsTitle').textContent = t.newsTitle;
+            document.getElementById('aiTitle').textContent = t.aiTitle;
             document.getElementById('aiHello').textContent = t.aiHello;
             document.getElementById('aiInput').placeholder = t.askPlaceholder;
-            document.getElementById('footerCopyright').textContent = t.copyright;
+            document.getElementById('footerText').textContent = t.footer;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
         }
         
         function changeLanguage(lang) {
             currentLang = lang;
             applyLanguage();
-        }
-        
-        function showTab(tab) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-            document.getElementById('page-market').style.display = tab === 'market' ? 'block' : 'none';
-            document.getElementById('page-news').style.display = tab === 'news' ? 'block' : 'none';
-            document.getElementById('page-ai').style.display = tab === 'ai' ? 'block' : 'none';
+            loadMarket();
         }
         
         // 行情
@@ -503,43 +399,35 @@
             try {
                 const res = await fetch(`${API_BASE}/price/top?limit=50`);
                 const data = await res.json();
-                if (data.success) {
-                    renderMarket(data.data, t);
-                }
+                if (data.success) renderMarket(data.data, t);
             } catch (e) {
-                document.getElementById('coinTable').innerHTML = `<tr><td colspan="6" class="loading">${t.loading}</td></tr>`;
+                document.getElementById('coinTable').innerHTML = `<tr><td colspan="5" class="loading">${t.loading}</td></tr>`;
             }
         }
         
         function renderMarket(coins, t) {
-            // Market header - BTC dominance
             const btc = coins.find(c => c.symbol === 'BTC');
             const eth = coins.find(c => c.symbol === 'ETH');
-            const totalMarketCap = coins.reduce((sum, c) => sum + (c.market_cap || 0), 0);
+            const totalCap = coins.reduce((sum, c) => sum + (c.market_cap || 0), 0);
             
             document.getElementById('marketHeader').innerHTML = `
-                <div class="market-item">
+                <div class="market-pill">
                     <span class="label">BTC</span>
-                    <span class="coin-price">${formatPrice(btc?.current_price)}</span>
-                    <span class="coin-change ${getChangeClass(btc?.price_change_percentage_24h)}">
-                        ${formatPercent(btc?.price_change_percentage_24h)}
-                    </span>
+                    <span class="value">${formatPrice(btc?.current_price)}</span>
+                    <span class="change ${getClass(btc?.price_change_percentage_24h)}">${formatPercent(btc?.price_change_percentage_24h)}</span>
                 </div>
-                <div class="market-item">
+                <div class="market-pill">
                     <span class="label">ETH</span>
-                    <span class="coin-price">${formatPrice(eth?.current_price)}</span>
-                    <span class="coin-change ${getChangeClass(eth?.price_change_percentage_24h)}">
-                        ${formatPercent(eth?.price_change_percentage_24h)}
-                    </span>
+                    <span class="value">${formatPrice(eth?.current_price)}</span>
+                    <span class="change ${getClass(eth?.price_change_percentage_24h)}">${formatPercent(eth?.price_change_percentage_24h)}</span>
                 </div>
-                <div class="market-item">
-                    <span class="label">${t.marketCap}</span>
-                    <span class="value">${formatMarketCap(totalMarketCap)}}</span>
+                <div class="market-pill">
+                    <span class="label">${t.change24h}</span>
+                    <span class="value">${formatMarketCap(totalCap)}</span>
                 </div>
             `;
             
-            // Coin table
-            document.getElementById('coinTable').innerHTML = coins.slice(0, 30).map(coin => `
+            document.getElementById('coinTable').innerHTML = coins.slice(0, 20).map(coin => `
                 <tr>
                     <td class="coin-rank">${coin.market_cap_rank || '-'}</td>
                     <td>
@@ -552,9 +440,8 @@
                         </div>
                     </td>
                     <td class="coin-price">${formatPrice(coin.current_price)}</td>
-                    <td><span class="coin-change ${getChangeClass(coin.price_change_percentage_24h)}">${formatPercent(coin.price_change_percentage_24h)}</span></td>
-                    <td class="hide-mobile"><span class="coin-change ${getChangeClass(coin.price_change_percentage_7d)}">${formatPercent(coin.price_change_percentage_7d)}</span></td>
-                    <td class="hide-mobile" class="coin-rank">${formatMarketCap(coin.market_cap)}</td>
+                    <td><span class="coin-change ${getClass(coin.price_change_percentage_24h)}">${formatPercent(coin.price_change_percentage_24h)}</span></td>
+                    <td><span class="coin-change ${getClass(coin.price_change_percentage_7d)}">${formatPercent(coin.price_change_percentage_7d)}</span></td>
                 </tr>
             `).join('');
         }
@@ -570,8 +457,7 @@
             if (!cap) return '-';
             if (cap >= 1e12) return '$' + (cap / 1e12).toFixed(2) + 'T';
             if (cap >= 1e9) return '$' + (cap / 1e9).toFixed(2) + 'B';
-            if (cap >= 1e6) return '$' + (cap / 1e6).toFixed(2) + 'M';
-            return '$' + cap.toLocaleString();
+            return '$' + (cap / 1e6).toFixed(0) + 'M';
         }
         
         function formatPercent(pct) {
@@ -579,41 +465,30 @@
             return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
         }
         
-        function getChangeClass(pct) {
-            if (!pct) return 'neutral';
-            return pct >= 0 ? 'up' : 'down';
-        }
+        function getClass(pct) { return (!pct || pct >= 0) ? 'up' : 'down'; }
         
         // 新闻
         async function loadNews() {
             const t = i18n[currentLang];
             const container = document.getElementById('newsContainer');
             container.innerHTML = `<div class="loading">${t.loading}</div>`;
-            
             try {
-                const res = await fetch(`${API_BASE}/news/en?limit=20`);
+                const res = await fetch(`${API_BASE}/news/en?limit=15`);
                 const data = await res.json();
-                if (data.success) {
-                    renderNews(data.data, t);
-                }
-            } catch (e) {
-                container.innerHTML = `<div class="loading">${t.noNews}</div>`;
-            }
+                if (data.success) renderNews(data.data, t);
+            } catch (e) { container.innerHTML = `<div class="loading">${t.noNews}</div>`; }
         }
         
         function renderNews(news, t) {
             const container = document.getElementById('newsContainer');
-            if (news.length === 0) {
-                container.innerHTML = `<div class="loading">${t.noNews}</div>`;
-                return;
-            }
+            if (!news.length) { container.innerHTML = `<div class="loading">${t.noNews}</div>`; return; }
             container.innerHTML = news.map(item => `
-                <div class="news-card">
+                <div class="news-card" onclick="window.location.href='/article.html?id=${encodeURIComponent(item.link)}'">
                     <div class="news-meta">
                         <span class="news-source">${item.source}</span>
                         <span class="news-time">${formatTime(item.timestamp)}</span>
                     </div>
-                    <h3><a href="/article.html?id=${encodeURIComponent(item.link)}">${item.title}</a></h3>
+                    <h4><a href="/article.html?id=${encodeURIComponent(item.link)}">${item.title}</a></h4>
                     <p>${stripHtml(item.content).slice(0, 100)}...</p>
                 </div>
             `).join('');
@@ -644,11 +519,7 @@
             input.value = '';
             chat.scrollTop = chat.scrollHeight;
             try {
-                const res = await fetch(`${API_BASE}/ai/ask`, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ question, lang: currentLang }) 
-                });
+                const res = await fetch(`${API_BASE}/ai/ask`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, lang: currentLang }) });
                 const data = await res.json();
                 chat.innerHTML = chat.innerHTML.replace(/<div class="bubble">Loading...<\/div>$/, '');
                 chat.innerHTML += `<div class="ai-message assistant"><div class="bubble">${data.success ? data.answer : 'Error'}</div></div>`;
@@ -667,6 +538,9 @@
         }
         
         function stripHtml(html) { return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(); }
+        
+        document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchNews(); });
+        document.getElementById('aiInput').addEventListener('keypress', e => { if (e.key === 'Enter') askAI(); });
         
         init();
     </script>
