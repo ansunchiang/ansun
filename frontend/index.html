@@ -118,9 +118,11 @@
         
         <div class="tab-nav">
             <button class="tab-btn active" onclick="showTab('signal', this)">📈 AI信号</button>
-            <button class="tab-btn" onclick="showTab('whale', this)">🐋 巨鲸追踪</button>
-            <button class="tab-btn" onclick="showTab('narratives', this)">🔥 概念轮动</button>
-            <button class="tab-btn" onclick="showTab('feed', this)">⭐ 我的关注</button>
+            <button class="tab-btn" onclick="showTab('whale', this)">🐋 巨鲸</button>
+            <button class="tab-btn" onclick="showTab('gold', this)">🥇 黄金</button>
+            <button class="tab-btn" onclick="showTab('trading', this)">🤖 交易</button>
+            <button class="tab-btn" onclick="showTab('narratives', this)">🔥 概念</button>
+            <button class="tab-btn" onclick="showTab('feed', this)">⭐ 关注</button>
         </div>
         
         <div id="tab-signal" class="tab-content active">
@@ -166,6 +168,131 @@
                 <div id="alertList"><div class="loading">加载中...</div></div>
             </div>
         </div>
+        
+        <div id="tab-gold" class="tab-content">
+            <div class="section-card">
+                <div class="section-title">🥇 贵金属行情</div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px">
+                    <div class="gold-card" style="background:linear-gradient(145deg, #21262d, #161b22);border:1px solid #30363d;border-radius:12px;padding:16px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                            <span style="font-size:2rem">🥇</span>
+                            <div>
+                                <div style="font-size:1.1rem;font-weight:700">黄金 (XAU/USD)</div>
+                                <div style="font-size:0.8rem;color:#8b949e">Gold</div>
+                            </div>
+                        </div>
+                        <div id="goldPrice" style="font-size:1.8rem;font-weight:700;color:#f0c14b">$2,035.50</div>
+                        <div style="display:flex;gap:8px;margin-top:8px">
+                            <span id="goldChange" style="padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600">+0.32%</span>
+                        </div>
+                    </div>
+                    <div class="gold-card" style="background:linear-gradient(145deg, #21262d, #161b22);border:1px solid #30363d;border-radius:12px;padding:16px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                            <span style="font-size:2rem">🥈</span>
+                            <div>
+                                <div style="font-size:1.1rem;font-weight:700">白银 (XAG/USD)</div>
+                                <div style="font-size:0.8rem;color:#8b949e">Silver</div>
+                            </div>
+                        </div>
+                        <div id="silverPrice" style="font-size:1.8rem;font-weight:700;color:#8b949e">$22.85</div>
+                        <div style="display:flex;gap:8px;margin-top:8px">
+                            <span id="silverChange" style="padding:4px 8px;border-radius:4px;font-size:0.85rem;font-weight:600">+0.66%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-title">🔔 价格提醒设置</div>
+                <div class="alert-form" style="background:#21262d;border-radius:8px;padding:14px">
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+                        <select id="alertSymbol" style="padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                            <option value="XAU">🥇 黄金</option>
+                            <option value="XAG">🥈 白银</option>
+                        </select>
+                        <select id="alertType" style="padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                            <option value="above">突破</option>
+                            <option value="below">跌破</option>
+                        </select>
+                        <input type="number" id="alertPrice" placeholder="价格" style="padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                    </div>
+                    <button onclick="addAlert()" style="width:100%;padding:10px;border-radius:6px;border:none;background:#1f6feb;color:#fff;font-weight:600;cursor:pointer">添加提醒</button>
+                </div>
+                <div id="alertList" style="margin-top:12px"></div>
+            </div>
+        </div>
+        
+        <div id="tab-trading" class="tab-content">
+            <div class="section-card" style="border-color:#f85149">
+                <div style="background:rgba(248,81,73,0.1);border-radius:8px;padding:12px;margin-bottom:16px">
+                    <div style="font-size:0.9rem;font-weight:600;color:#f85149;margin-bottom:8px">⚠️ 风险提示</div>
+                    <ul style="font-size:0.8rem;color:#8b949e;padding-left:16px;line-height:1.8">
+                        <li>自动交易涉及真实资金风险</li>
+                        <li>建议先使用测试网 (testnet) 验证策略</li>
+                        <li>设置止损以限制最大亏损</li>
+                        <li>不要使用有提币权限的 API Key</li>
+                    </ul>
+                </div>
+                
+                <div class="section-title">🔗 交易所 API 配置</div>
+                <div class="alert-form" style="background:#21262d;border-radius:8px;padding:14px;margin-bottom:16px">
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;font-size:0.85rem;color:#8b949e;margin-bottom:6px">交易所</label>
+                        <select id="exchange" style="width:100%;padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                            <option value="binance">Binance (主网)</option>
+                            <option value="binance_testnet">Binance (测试网)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;font-size:0.85rem;color:#8b949e;margin-bottom:6px">API Key</label>
+                        <input type="text" id="apiKey" placeholder="输入 API Key" style="width:100%;padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                    </div>
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;font-size:0.85rem;color:#8b949e;margin-bottom:6px">API Secret</label>
+                        <input type="password" id="apiSecret" placeholder="输入 API Secret" style="width:100%;padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                    </div>
+                    <button onclick="saveExchangeConfig()" style="width:100%;padding:10px;border-radius:6px;border:none;background:#238636;color:#fff;font-weight:600;cursor:pointer">保存配置</button>
+                </div>
+                
+                <div class="section-title">📊 当前持仓</div>
+                <div id="positionsList" style="margin-bottom:16px">
+                    <div style="background:#21262d;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+                        <div>
+                            <div style="font-weight:600">BTC/USDT</div>
+                            <div style="font-size:0.8rem;color:#8b949e">数量: 0.5</div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="color:#3fb950;font-weight:600">+$750 (3.57%)</div>
+                            <div style="font-size:0.8rem;color:#8b949e">$43,500</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">🤖 策略配置</div>
+                <div class="alert-form" style="background:#21262d;border-radius:8px;padding:14px">
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;font-size:0.85rem;color:#8b949e;margin-bottom:6px">交易对</label>
+                        <select id="tradeSymbol" style="width:100%;padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                            <option value="BTC/USDT">BTC/USDT</option>
+                            <option value="ETH/USDT">ETH/USDT</option>
+                            <option value="SOL/USDT">SOL/USDT</option>
+                            <option value="XAU/USDT">XAU/USDT (黄金)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:12px">
+                        <label style="display:block;font-size:0.85rem;color:#8b949e;margin-bottom:6px">策略</label>
+                        <select id="strategy" style="width:100%;padding:10px;border-radius:6px;border:1px solid #30363d;background:#161b22;color:#c9d1d9">
+                            <option value="grid">网格交易 - 区间低买高卖</option>
+                            <option value="ma_crossover">均线交叉 - MA5/MA20</option>
+                            <option value="rsi">RSI 策略 - 30买入/70卖出</option>
+                        </select>
+                    </div>
+                    <button onclick="startStrategy()" style="width:100%;padding:10px;border-radius:6px;border:none;background:#1f6feb;color:#fff;font-weight:600;cursor:pointer">启动策略</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-narratives" class="tab-content">
         
         <div id="tab-narratives" class="tab-content">
             <div class="section-card">
@@ -237,6 +364,9 @@
             loadWhaleAlerts();
             loadNarratives();
             updateFollowedCoins();
+            loadGold();
+            loadExchangeConfig();
+            renderAlerts();
         }
         
         function showTab(tab, btn) {
@@ -399,6 +529,78 @@
         
         function formatTime(ts) { const d = (Date.now() - ts) / 1000 / 60; if (d < 60) return Math.floor(d) + '分钟前'; if (d < 1440) return Math.floor(d / 60) + '小时前'; return Math.floor(d / 1440) + '天前'; }
         function formatLargeNumber(n) { if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M'; if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'K'; return '$' + n; }
+        
+        // 贵金属行情
+        async function loadGold() {
+            try {
+                const res = await fetch(API_BASE + '/gold/all');
+                const data = await res.json();
+                if (data.success) {
+                    const g = data.data.gold;
+                    const s = data.data.silver;
+                    document.getElementById('goldPrice').textContent = '$' + g.price.toLocaleString();
+                    document.getElementById('goldChange').textContent = (g.change_percent >= 0 ? '+' : '') + g.change_percent.toFixed(2) + '%';
+                    document.getElementById('goldChange').style.background = g.change_percent >= 0 ? 'rgba(63,185,80,0.2)' : 'rgba(248,81,73,0.2)';
+                    document.getElementById('goldChange').style.color = g.change_percent >= 0 ? '#3fb950' : '#f85149';
+                    document.getElementById('silverPrice').textContent = '$' + s.price.toFixed(2);
+                    document.getElementById('silverChange').textContent = (s.change_percent >= 0 ? '+' : '') + s.change_percent.toFixed(2) + '%';
+                    document.getElementById('silverChange').style.background = s.change_percent >= 0 ? 'rgba(63,185,80,0.2)' : 'rgba(248,81,73,0.2)';
+                    document.getElementById('silverChange').style.color = s.change_percent >= 0 ? '#3fb950' : '#f85149';
+                }
+            } catch (e) { console.error('Gold error:', e); }
+        }
+        
+        // 价格提醒
+        function addAlert() {
+            const symbol = document.getElementById('alertSymbol').value;
+            const type = document.getElementById('alertType').value;
+            const price = document.getElementById('alertPrice').value;
+            if (!price) return alert('请输入价格');
+            const alerts = JSON.parse(localStorage.getItem('priceAlerts') || '[]');
+            alerts.push({ symbol, type, price, time: new Date().toLocaleString() });
+            localStorage.setItem('priceAlerts', JSON.stringify(alerts));
+            renderAlerts();
+            document.getElementById('alertPrice').value = '';
+        }
+        
+        function renderAlerts() {
+            const alerts = JSON.parse(localStorage.getItem('priceAlerts') || '[]');
+            if (alerts.length === 0) {
+                document.getElementById('alertList').innerHTML = '<div style="text-align:center;padding:20px;color:#8b949e">暂无价格提醒</div>';
+                return;
+            }
+            document.getElementById('alertList').innerHTML = alerts.map((a, i) => '<div style="background:#21262d;border-radius:8px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><span style="font-weight:600">' + (a.symbol === 'XAU' ? '🥇 黄金' : '🥈 白银') + '</span><span style="color:#8b949e;font-size:0.8rem;margin-left:8px">' + (a.type === 'above' ? '突破' : '跌破') + ' $' + a.price + '</span></div><button onclick="removeAlert(' + i + ')" style="padding:4px 8px;border-radius:4px;border:1px solid #30363d;background:transparent;color:#f85149;cursor:pointer">删除</button></div>').join('');
+        }
+        
+        function removeAlert(i) {
+            const alerts = JSON.parse(localStorage.getItem('priceAlerts') || '[]');
+            alerts.splice(i, 1);
+            localStorage.setItem('priceAlerts', JSON.stringify(alerts));
+            renderAlerts();
+        }
+        
+        // 交易所配置
+        function saveExchangeConfig() {
+            const exchange = document.getElementById('exchange').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const apiSecret = document.getElementById('apiSecret').value;
+            if (!apiKey || !apiSecret) return alert('请填写完整信息');
+            localStorage.setItem('exchangeConfig', JSON.stringify({ exchange, apiKey, apiSecret: '***' }));
+            alert('配置已保存！' + (exchange.includes('testnet') ? ' (测试网模式)' : ' (主网模式，请谨慎交易)'));
+        }
+        
+        function loadExchangeConfig() {
+            const config = JSON.parse(localStorage.getItem('exchangeConfig') || '{}');
+            if (config.exchange) document.getElementById('exchange').value = config.exchange;
+            if (config.apiKey) document.getElementById('apiKey').value = config.apiKey;
+            if (config.apiSecret) document.getElementById('apiSecret').value = '***';
+        }
+        
+        function startStrategy() {
+            const symbol = document.getElementById('tradeSymbol').value;
+            const strategy = document.getElementById('strategy').value;
+            alert('策略已启动！\n\n交易对: ' + symbol + '\n策略: ' + (strategy === 'grid' ? '网格交易' : strategy === 'ma_crossover' ? '均线交叉' : 'RSI 策略') + '\n\n⚠️ 模拟运行，实际交易请确保 API 配置正确');
+        }
         
         init();
     </script>
