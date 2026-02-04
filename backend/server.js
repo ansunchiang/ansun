@@ -14,6 +14,7 @@ const priceRoutes = require('./routes/price');
 const featuresRoutes = require('./routes/features');
 const chainRoutes = require('./routes/chain');
 const signalRoutes = require('./routes/signal');
+const whaleRoutes = require('./routes/whale');
 const { startCacheScheduler, getCacheStatus } = require('./services/news');
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/api/price', priceRoutes);
 app.use('/api/features', featuresRoutes);
 app.use('/api/chain', chainRoutes);
 app.use('/api/signal', signalRoutes);
+app.use('/api/whale', whaleRoutes);
 
 // 健康检查 + 缓存状态
 app.get('/api/health', (req, res) => {

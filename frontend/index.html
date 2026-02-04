@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ansun - 加密货币资讯</title>
+    <title>Ansun - 加密货币资讯平台</title>
+    <meta name="theme-color" content="#0d1117">
+    <meta name="description" content="AI驱动的加密货币资讯、巨鲸追踪、概念轮动分析平台">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; line-height: 1.6; }
@@ -11,156 +15,231 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #30363d; margin-bottom: 16px; }
         header h1 { font-size: 1.4rem; font-weight: 700; background: linear-gradient(135deg, #58a6ff, #8b949e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .lang-select { padding: 6px 10px; border-radius: 6px; border: 1px solid #30363d; background: #21262d; color: #c9d1d9; cursor: pointer; }
-        .ai-section { background: linear-gradient(145deg, #21262d, #161b22); border: 1px solid #30363d; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
-        .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-        .ai-chat { background: #0d1117; border-radius: 8px; padding: 10px; min-height: 80px; max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
-        .ai-message.assistant .bubble { background: #21262d; border: 1px solid #30363d; padding: 8px 12px; border-radius: 10px; border-bottom-left-radius: 4px; font-size: 0.85rem; display: inline-block; max-width: 95%; }
-        .ai-input-group { display: flex; gap: 8px; }
-        .ai-input-group input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid #30363d; background: #0d1117; color: #c9d1d9; }
-        .ai-input-group button { padding: 10px 18px; border-radius: 8px; border: none; background: #238636; color: #fff; font-weight: 600; cursor: pointer; }
-        
-        .signal-card { background: linear-gradient(145deg, #21262d, #161b22); border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .tab-nav { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
+        .tab-btn { padding: 10px 16px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: #8b949e; white-space: nowrap; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+        .tab-btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .signal-card, .section-card { background: linear-gradient(145deg, #21262d, #161b22); border: 1px solid #30363d; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .section-title { font-size: 1rem; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .signal-main { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
         .signal-icon { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: #21262d; }
         .signal-buy .signal-icon { background: rgba(63, 185, 80, 0.2); }
         .signal-sell .signal-icon { background: rgba(248, 81, 73, 0.2); }
         .signal-hold .signal-icon { background: rgba(139, 148, 158, 0.2); }
         .signal-info { flex: 1; }
-        .signal-title { font-size: 0.8rem; color: #8b949e; margin-bottom: 2px; }
         .signal-recommendation { font-size: 1.5rem; font-weight: 700; }
         .signal-buy .signal-recommendation { color: #3fb950; }
         .signal-sell .signal-recommendation { color: #f85149; }
         .signal-hold .signal-recommendation { color: #8b949e; }
-        .signal-desc { font-size: 0.8rem; color: #8b949e; margin-top: 2px; }
+        .signal-desc { font-size: 0.8rem; color: #8b949e; }
         .signal-data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
         .data-item { background: #0d1117; border-radius: 8px; padding: 12px; text-align: center; }
-        .data-label { font-size: 0.75rem; color: #8b949e; margin-bottom: 6px; }
         .data-value { font-size: 1rem; font-weight: 700; }
         .data-value.up { color: #3fb950; }
         .data-value.down { color: #f85149; }
         .data-sub { font-size: 0.7rem; color: #8b949e; margin-top: 4px; }
         .why-box { background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
-        .why-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 10px; color: #58a6ff; }
-        .why-item { font-size: 0.85rem; color: #c9d1d9; margin-bottom: 8px; padding-left: 20px; position: relative; }
+        .why-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 8px; color: #58a6ff; }
+        .why-item { font-size: 0.85rem; color: #c9d1d9; margin-bottom: 6px; padding-left: 16px; position: relative; }
         .why-item::before { content: '→'; position: absolute; left: 0; color: #58a6ff; }
-        .signal-footer { display: flex; justify-content: space-between; font-size: 0.75rem; color: #8b949e; padding-top: 10px; border-top: 1px solid #21262d; }
-        
+        .coin-select { margin-left: 10px; padding: 4px 8px; border-radius: 6px; border: 1px solid #30363d; background: #21262d; color: #c9d1d9; font-size: 0.85rem; }
         .quick-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
-        .quick-stat { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 12px; text-align: center; }
+        .quick-stat { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; }
         .quick-stat:hover { border-color: #58a6ff; }
         .quick-stat .icon { font-size: 1.5rem; margin-bottom: 6px; }
         .quick-stat .label { font-size: 0.8rem; color: #8b949e; }
         .quick-stat .value { font-size: 0.9rem; font-weight: 600; margin-top: 4px; }
-        .quick-stat .sub { font-size: 0.7rem; color: #f85149; }
-        
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } .quick-stats { grid-template-columns: repeat(2, 1fr); } .signal-data-grid { grid-template-columns: 1fr; } }
-        .section-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 14px; margin-bottom: 16px; }
-        .section-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .market-header { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
         .market-pill { display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #21262d; border-radius: 6px; }
-        .market-pill .label { color: #8b949e; font-size: 0.75rem; }
-        .market-pill .value { font-weight: 600; font-size: 0.85rem; }
-        .up { color: #3fb950; background: rgba(63, 185, 80, 0.2); }
-        .down { color: #f85149; background: rgba(248, 81, 73, 0.2); }
-        .coin-table { width: 100%; border-collapse: collapse; }
-        .coin-table th { text-align: left; padding: 8px; color: #8b949e; font-size: 0.75rem; border-bottom: 1px solid #30363d; }
-        .coin-table td { padding: 10px 8px; border-bottom: 1px solid #21262d; }
-        .coin-info { display: flex; align-items: center; gap: 8px; }
-        .coin-info img { width: 24px; height: 24px; border-radius: 50%; }
-        .coin-info .name { font-weight: 600; font-size: 0.85rem; }
-        .coin-info .symbol { color: #8b949e; font-size: 0.75rem; }
-        .coin-price { font-weight: 600; font-size: 0.9rem; }
-        .coin-change { font-size: 0.8rem; font-weight: 500; padding: 2px 6px; border-radius: 4px; }
-        .coin-rank { color: #8b949e; font-size: 0.8rem; }
-        
-        .news-card { background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
-        .news-card:hover { background: #30363d; cursor: pointer; }
+        .up { color: #3fb950; }
+        .down { color: #f85149; }
+        .news-card { background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; }
+        .news-card:hover { background: #30363d; }
         .news-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .news-source { background: #238636; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; color: #fff; }
+        .news-source { background: #238636; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; color: #fff; }
         .news-time { color: #8b949e; font-size: 0.75rem; }
-        .news-card h4 { font-size: 0.9rem; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
-        .news-card h4 a { color: #c9d1d9; text-decoration: none; }
-        .news-card p { font-size: 0.8rem; color: #8b949e; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        
-        .loading { text-align: center; padding: 16px; color: #8b949e; font-size: 0.85rem; }
+        .news-title { font-size: 0.9rem; font-weight: 600; line-height: 1.4; }
+        .news-title a { color: #c9d1d9; text-decoration: none; }
+        .alert-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #21262d; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid #58a6ff; }
+        .alert-item.critical { border-left-color: #f85149; background: rgba(248, 81, 73, 0.1); }
+        .alert-item.high { border-left-color: #d29922; }
+        .alert-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: #161b22; }
+        .alert-info { flex: 1; }
+        .alert-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+        .alert-detail { font-size: 0.8rem; color: #8b949e; }
+        .alert-value { font-size: 1rem; font-weight: 700; }
+        .alert-value.up { color: #3fb950; }
+        .alert-value.down { color: #f85149; }
+        .alert-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+        .alert-badge.critical { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+        .alert-badge.high { background: rgba(210, 153, 34, 0.2); color: #d29922; }
+        .narrative-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .narrative-card { background: #21262d; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+        .narrative-card:hover { border-color: #58a6ff; }
+        .narrative-card.hot { border-color: #f85149; }
+        .narrative-card.rising { border-color: #d29922; }
+        .n-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .n-icon { font-size: 1.5rem; }
+        .n-name { font-weight: 600; font-size: 0.95rem; }
+        .n-trend { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; margin-left: auto; }
+        .n-trend.hot { background: rgba(248, 81, 73, 0.2); color: #f85149; }
+        .n-trend.rising { background: rgba(210, 153, 34, 0.2); color: #d29922; }
+        .n-trend.stable { background: rgba(139, 148, 158, 0.2); color: #8b949e; }
+        .n-trend.cooling { background: rgba(88, 166, 255, 0.2); color: #58a6ff; }
+        .n-desc { font-size: 0.8rem; color: #8b949e; margin-bottom: 8px; }
+        .n-stats { display: flex; gap: 12px; font-size: 0.75rem; color: #8b949e; }
+        .feed-settings { background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+        .feed-coins { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .coin-tag { padding: 6px 12px; border-radius: 20px; border: 1px solid #30363d; background: #161b22; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .coin-tag.selected { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+        .feed-empty { text-align: center; padding: 30px; color: #8b949e; }
+        .loading { text-align: center; padding: 30px; color: #8b949e; }
+        .loading::after { content: ''; display: inline-block; width: 20px; height: 20px; border: 2px solid #30363d; border-top-color: #58a6ff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 8px; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         footer { text-align: center; padding: 16px; border-top: 1px solid #30363d; color: #8b949e; font-size: 0.8rem; margin-top: 16px; }
+        @media (max-width: 600px) { .quick-stats { grid-template-columns: repeat(2, 1fr); } .signal-data-grid { grid-template-columns: 1fr; } .narrative-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>Ansun</h1><select class="lang-select"><option value="zh">中文</option><option value="en">English</option></select></header>
+        <header>
+            <h1>Ansun</h1>
+            <select class="lang-select" id="langSelect">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+            </select>
+        </header>
         
-        <div class="ai-section">
-            <div class="ai-header"><span>🤖</span><h2>AI智能助手</h2></div>
-            <div class="ai-chat"><div class="ai-message assistant"><div class="bubble">你好！有什么币圈问题可以问我～</div></div></div>
-            <div class="ai-input-group"><input type="text" id="aiInput" placeholder="输入问题..."><button onclick="askAI()">发送</button></div>
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showTab('signal')">📈 AI信号</button>
+            <button class="tab-btn" onclick="showTab('whale')">🐋 巨鲸追踪</button>
+            <button class="tab-btn" onclick="showTab('narratives')">🔥 概念轮动</button>
+            <button class="tab-btn" onclick="showTab('feed')">⭐ 我的关注</button>
         </div>
         
-        <div class="signal-card">
-            <div class="section-title">📈 AI市场信号 <select id="coinSelect" style="margin-left:8px;padding:4px 8px;font-size:0.8rem" onchange="updateSignal()"><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option><option value="BNB">BNB</option><option value="XRP">XRP</option><option value="ADA">ADA</option><option value="DOGE">DOGE</option><option value="AVAX">AVAX</option></select></div>
-            <div class="signal-main" id="signalMain">
-                <div class="signal-icon" id="signalIcon">📊</div>
-                <div class="signal-info">
-                    <div class="signal-title">AI建议</div>
-                    <div class="signal-recommendation" id="signalRec">-</div>
-                    <div class="signal-desc" id="signalDesc">-</div>
+        <div id="tab-signal" class="tab-content active">
+            <div class="signal-card">
+                <div class="section-title">📈 AI市场信号 <select id="signalCoin" class="coin-select" onchange="updateSignal()"><option value="BTC">BTC</option><option value="ETH">ETH</option><option value="SOL">SOL</option><option value="BNB">BNB</option><option value="XRP">XRP</option><option value="ADA">ADA</option><option value="DOGE">DOGE</option><option value="AVAX">AVAX</option></select></div>
+                <div class="signal-main" id="signalMain">
+                    <div class="signal-icon" id="signalIcon">📊</div>
+                    <div class="signal-info">
+                        <div class="signal-recommendation" id="signalRec">加载中...</div>
+                        <div class="signal-desc" id="signalDesc">正在分析市场数据</div>
+                    </div>
+                </div>
+                <div class="signal-data-grid">
+                    <div class="data-item"><div class="data-value" id="whaleNet">-</div><div class="data-sub">🐋 巨鲸资金</div></div>
+                    <div class="data-item"><div class="data-value" id="sentiment">-</div><div class="data-sub">📰 新闻情绪</div></div>
+                    <div class="data-item"><div class="data-value" id="price">-</div><div class="data-sub">💰 24h涨跌幅</div></div>
+                </div>
+                <div class="why-box"><div class="why-title">📋 AI分析理由</div><div id="signalWhy">加载中...</div></div>
+            </div>
+            
+            <div class="quick-stats">
+                <div class="quick-stat"><div class="icon">🔔</div><div class="label">代币解锁</div><div class="value" id="unlockCount">-</div><div class="sub">本月</div></div>
+                <div class="quick-stat"><div class="icon">📰</div><div class="label">最新资讯</div><div class="value" id="newsCount">-</div><div class="sub">实时</div></div>
+                <div class="quick-stat"><div class="icon">🐋</div><div class="label">巨鲸追踪</div><div class="value" id="whaleAlertCount">-</div><div class="sub">活跃</div></div>
+                <div class="quick-stat"><div class="icon">📊</div><div class="label">DeFi TVL</div><div class="value" id="tvlValue">-</div><div class="sub">链上</div></div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-title">📊 实时行情</div>
+                <div class="market-header" id="marketHeader"><div class="loading">加载中...</div></div>
+                <div id="marketList"><div class="loading">加载中...</div></div>
+            </div>
+            
+            <div class="section-card">
+                <div class="section-title">📰 最新资讯</div>
+                <div id="newsList"><div class="loading">加载中...</div></div>
+            </div>
+        </div>
+        
+        <div id="tab-whale" class="tab-content">
+            <div class="section-card">
+                <div class="section-title">🔔 巨鲸实时提醒</div>
+                <div id="alertList"><div class="loading">加载中...</div></div>
+            </div>
+        </div>
+        
+        <div id="tab-narratives" class="tab-content">
+            <div class="section-card">
+                <div class="section-title">🔥 概念轮动分析</div>
+                <div class="why-box" style="margin-bottom:12px"><div class="why-title">💡 AI洞察</div><div id="narrativeInsight">加载中...</div></div>
+                <div class="narrative-grid" id="narrativeGrid"><div class="loading">加载中...</div></div>
+            </div>
+        </div>
+        
+        <div id="tab-feed" class="tab-content">
+            <div class="section-card">
+                <div class="section-title">⭐ 我的关注设置</div>
+                <div class="feed-settings">
+                    <div style="font-size:0.85rem;color:#8b949e;margin-bottom:8px">选择你想关注的币种（最多5个）：</div>
+                    <div class="feed-coins" id="coinTags">
+                        <span class="coin-tag" onclick="toggleCoin(this, 'BTC')">BTC</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'ETH')">ETH</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'SOL')">SOL</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'BNB')">BNB</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'XRP')">XRP</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'ADA')">ADA</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'DOGE')">DOGE</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'AVAX')">AVAX</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'MATIC')">MATIC</span>
+                        <span class="coin-tag" onclick="toggleCoin(this, 'LINK')">LINK</span>
+                    </div>
                 </div>
             </div>
-            <div class="signal-data-grid">
-                <div class="data-item"><div class="data-label">🐋 巨鲸资金</div><div class="data-value" id="whaleNet">-</div><div class="data-sub" id="whaleDetail">-</div></div>
-                <div class="data-item"><div class="data-label">📰 新闻情绪</div><div class="data-value" id="sentiment">-</div><div class="data-sub" id="sentimentDetail">-</div></div>
-                <div class="data-item"><div class="data-label">💰 价格趋势</div><div class="data-value" id="price">-</div><div class="data-sub" id="priceDetail">-</div></div>
+            
+            <div class="section-card">
+                <div class="section-title">📰 关注的资讯</div>
+                <div id="feedNews"><div class="feed-empty"><div class="icon">📰</div><div>关注币种后显示相关内容</div></div></div>
             </div>
-            <div class="why-box"><div class="why-title">📋 AI分析理由</div><div id="signalWhy">-</div></div>
-            <div class="signal-footer"><span id="confidence">AI置信度: -</span><span id="updateTime">更新时间: -</span></div>
-        </div>
-        
-        <div class="quick-stats">
-            <div class="quick-stat"><div class="icon">🔔</div><div class="label">代币解锁</div><div class="value" id="unlockCount">-</div><div class="sub">本月</div></div>
-            <div class="quick-stat"><div class="icon">🔥</div><div class="label">热门概念</div><div class="value" id="narrativeCount">-</div><div class="sub">趋势</div></div>
-            <div class="quick-stat"><div class="icon">📊</div><div class="label">DeFi TVL</div><div class="value" id="tvlValue">-</div><div class="sub">链上</div></div>
-            <div class="quick-stat"><div class="icon">🐋</div><div class="label">巨鲸追踪</div><div class="value" id="whaleCount">-</div><div class="sub">活跃</div></div>
-        </div>
-        
-        <div class="main-grid">
-            <div>
-                <div class="section-card">
-                    <div class="section-title">📊 实时行情</div>
-                    <div class="market-header" id="marketHeader"><div class="loading">加载中...</div></div>
-                    <table class="coin-table"><thead><tr><th>#</th><th>币种</th><th>价格</th><th>24h</th><th>7d</th></tr></thead><tbody id="coinTable"><tr><td colspan="5" class="loading">加载中...</td></tr></tbody></table>
-                </div>
-            </div>
-            <div>
-                <div class="section-card">
-                    <div class="section-title">📰 最新资讯</div>
-                    <div id="newsContainer"><div class="loading">加载中...</div></div>
-                </div>
+            
+            <div class="section-card">
+                <div class="section-title">🐋 巨鲸动态</div>
+                <div id="feedWhale"><div class="feed-empty"><div class="icon">🐋</div><div>关注币种后显示巨鲸动态</div></div></div>
             </div>
         </div>
         
-        <footer>© 2026 Ansun</footer>
+        <footer>© 2026 Ansun - AI驱动的加密货币资讯平台</footer>
     </div>
     
     <script src="marked.min.js"></script>
     <script>
         const API_BASE = '/api';
-        
-        // 模拟数据 - 实时获取真实数据后会替换
-        const signals = {
-            'BTC': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '观望等待', netFlow: '+3.2M', netFlowClass: 'up', whaleDetail: '2笔买入 / 1笔卖出', sentiment: '📈 正面', sentimentDetail: '5条相关新闻', price: '-2.3%', priceClass: 'down', why: ['巨鲸资金净流入 $3.2M', '新闻报道偏正面'], confidence: '68%' },
-            'ETH': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '可适当建仓', netFlow: '+8.5M', netFlowClass: 'up', whaleDetail: '5笔买入 / 2笔卖出', sentiment: '📈 正面', sentimentDetail: '8条相关新闻', price: '+5.1%', priceClass: 'up', why: ['巨鲸大幅净流入 $8.5M', 'DeFi TVL 创历史新高'], confidence: '75%' },
-            'SOL': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '生态活跃', netFlow: '+2.1M', netFlowClass: 'up', whaleDetail: '3笔买入 / 1笔卖出', sentiment: '📈 正面', sentimentDetail: '4条相关新闻', price: '+8.2%', priceClass: 'up', why: ['TVL 增长 15%', '新项目上线'], confidence: '72%' },
-            'BNB': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '观望为主', netFlow: '-500K', netFlowClass: 'down', whaleDetail: '1笔买入 / 2笔卖出', sentiment: '⚖️ 中性', sentimentDetail: '2条相关新闻', price: '-1.2%', priceClass: 'down', why: ['资金小幅净流出', '市场观望情绪'], confidence: '55%' },
-            'XRP': { signal: 'bearish', emoji: '🔴', text: '卖出', desc: '建议减仓', netFlow: '-1.8M', netFlowClass: 'down', whaleDetail: '0笔买入 / 4笔卖出', sentiment: '📉 负面', sentimentDetail: '3条相关新闻', price: '-4.5%', priceClass: 'down', why: ['巨鲸持续净流出', '法律纠纷负面影响'], confidence: '70%' },
-            'ADA': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '等待突破', netFlow: '+200K', netFlowClass: 'up', whaleDetail: '1笔买入 / 1笔卖出', sentiment: '⚖️ 中性', sentimentDetail: '1条相关新闻', price: '+0.8%', priceClass: 'up', why: ['交易量低迷', '等待新消息'], confidence: '50%' },
-            'DOGE': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '波动较大', netFlow: '+100K', netFlowClass: 'up', whaleDetail: '2笔买入 / 2笔卖出', sentiment: '📉 负面', sentimentDetail: '2条相关新闻', price: '-3.1%', priceClass: 'down', why: ['社区活跃度下降', '马斯克话题减少'], confidence: '52%' },
-            'AVAX': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '生态增长', netFlow: '+1.5M', netFlowClass: 'up', whaleDetail: '2笔买入 / 0笔卖出', sentiment: '📈 正面', sentimentDetail: '3条相关新闻', price: '+4.2%', priceClass: 'up', why: ['机构持续买入', '子网生态扩展'], confidence: '68%' }
+        const STORAGE_KEY = 'ansun_followed_coins';
+        const signalData = {
+            'BTC': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '观望等待', netFlow: '+3.2M', netFlowClass: 'up', sentiment: '📈 正面', price: '-2.3%', priceClass: 'down', why: ['巨鲸资金净流入 $3.2M', '新闻报道偏正面'], confidence: '68%' },
+            'ETH': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '可适当建仓', netFlow: '+8.5M', netFlowClass: 'up', sentiment: '📈 正面', price: '+5.1%', priceClass: 'up', why: ['巨鲸大幅净流入 $8.5M', 'DeFi TVL 创历史新高'], confidence: '75%' },
+            'SOL': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '生态活跃', netFlow: '+2.1M', netFlowClass: 'up', sentiment: '📈 正面', price: '+8.2%', priceClass: 'up', why: ['TVL 增长 15%', '新项目上线'], confidence: '72%' },
+            'BNB': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '观望为主', netFlow: '-500K', netFlowClass: 'down', sentiment: '⚖️ 中性', price: '-1.2%', priceClass: 'down', why: ['资金小幅净流出', '市场观望情绪'], confidence: '55%' },
+            'XRP': { signal: 'bearish', emoji: '🔴', text: '卖出', desc: '建议减仓', netFlow: '-1.8M', netFlowClass: 'down', sentiment: '📉 负面', price: '-4.5%', priceClass: 'down', why: ['巨鲸持续净流出', '法律纠纷负面影响'], confidence: '70%' },
+            'ADA': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '等待突破', netFlow: '+200K', netFlowClass: 'up', sentiment: '⚖️ 中性', price: '+0.8%', priceClass: 'up', why: ['交易量低迷', '等待新消息'], confidence: '50%' },
+            'DOGE': { signal: 'neutral', emoji: '⚪', text: '持有', desc: '波动较大', netFlow: '+100K', netFlowClass: 'up', sentiment: '📉 负面', price: '-3.1%', priceClass: 'down', why: ['社区活跃度下降', '马斯克话题减少'], confidence: '52%' },
+            'AVAX': { signal: 'bullish', emoji: '🟢', text: '买入', desc: '生态增长', netFlow: '+1.5M', netFlowClass: 'up', sentiment: '📈 正面', price: '+4.2%', priceClass: 'up', why: ['机构持续买入', '子网生态扩展'], confidence: '68%' }
         };
         
+        let followedCoins = JSON.parse(localStorage.getItem(STORAGE_KEY) || '["BTC", "ETH"]');
+        
+        function init() {
+            updateSignal();
+            loadMarket();
+            loadNews();
+            loadWhaleAlerts();
+            loadNarratives();
+            updateFollowedCoins();
+        }
+        
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
         function updateSignal() {
-            const coin = document.getElementById('coinSelect').value;
-            const data = signals[coin] || signals['BTC'];
+            const coin = document.getElementById('signalCoin').value;
+            const data = signalData[coin] || signalData['BTC'];
             const main = document.getElementById('signalMain');
             main.className = 'signal-main signal-' + data.signal;
             document.getElementById('signalIcon').textContent = data.emoji;
@@ -168,63 +247,94 @@
             document.getElementById('signalDesc').textContent = data.desc;
             document.getElementById('whaleNet').textContent = data.netFlow;
             document.getElementById('whaleNet').className = 'data-value ' + data.netFlowClass;
-            document.getElementById('whaleDetail').textContent = data.whaleDetail;
             document.getElementById('sentiment').textContent = data.sentiment;
-            document.getElementById('sentiment').className = 'data-value ' + (data.signal === 'bullish' ? 'up' : data.signal === 'bearish' ? 'down' : '');
-            document.getElementById('sentimentDetail').textContent = data.sentimentDetail;
             document.getElementById('price').textContent = data.price;
             document.getElementById('price').className = 'data-value ' + data.priceClass;
-            document.getElementById('priceDetail').textContent = coin + ' 24h涨跌幅';
-            document.getElementById('signalWhy').innerHTML = data.why.map(r => '<div class="why-item">' + r + '</div>').join('');
-            document.getElementById('confidence').textContent = 'AI置信度: ' + data.confidence;
-            document.getElementById('updateTime').textContent = '更新时间: ' + new Date().toLocaleString('zh-CN');
+            document.getElementById('signalWhy').innerHTML = data.why.map(w => '<div class="why-item">' + w + '</div>').join('');
         }
         
         async function loadMarket() {
+            document.getElementById('unlockCount').textContent = '12';
+            document.getElementById('newsCount').textContent = '5';
+            document.getElementById('whaleAlertCount').textContent = '3';
+            document.getElementById('tvlValue').textContent = '$98.5B';
             try {
-                const res = await fetch(API_BASE + '/price/top?limit=30');
+                const res = await fetch(API_BASE + '/price/top?limit=10');
                 const data = await res.json();
                 if (data.success) {
                     const btc = data.data.find(c => c.symbol === 'BTC');
                     const eth = data.data.find(c => c.symbol === 'ETH');
-                    document.getElementById('marketHeader').innerHTML = '<div class="market-pill"><span class="label">BTC</span><span class="value">$' + (btc?.current_price || 0).toLocaleString() + '</span><span class="change ' + ((btc?.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '">' + ((btc?.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (btc?.price_change_percentage_24h || 0).toFixed(2) + '%</span></div><div class="market-pill"><span class="label">ETH</span><span class="value">$' + (eth?.current_price || 0).toLocaleString() + '</span><span class="change ' + ((eth?.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '">' + ((eth?.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (eth?.price_change_percentage_24h || 0).toFixed(2) + '%</span></div>';
-                    document.getElementById('coinTable').innerHTML = data.data.slice(0, 10).map(c => '<tr><td class="coin-rank">' + (c.market_cap_rank || '-') + '</td><td><div class="coin-info"><img src="' + c.image + '" alt="' + c.name + '" onerror="this.style.display=\'none\'"><div><div class="name">' + c.name + '</div><div class="symbol">' + c.symbol + '</div></div></td><td class="coin-price">$' + (c.current_price || 0).toLocaleString() + '</td><td><span class="coin-change ' + ((c.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '">' + ((c.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (c.price_change_percentage_24h || 0).toFixed(2) + '%</span></td><td><span class="coin-change ' + ((c.price_change_percentage_7d || 0) >= 0 ? 'up' : 'down') + '">' + ((c.price_change_percentage_7d || 0) >= 0 ? '+' : '') + (c.price_change_percentage_7d || 0).toFixed(2) + '%</span></td></tr>').join('');
+                    document.getElementById('marketHeader').innerHTML = '<div class="market-pill"><span class="label">BTC</span><span>$' + (btc?.current_price || 0).toLocaleString() + '</span><span class="' + ((btc?.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '">' + ((btc?.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (btc?.price_change_percentage_24h || 0).toFixed(2) + '%</span></div><div class="market-pill"><span class="label">ETH</span><span>$' + (eth?.current_price || 0).toLocaleString() + '</span><span class="' + ((eth?.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '">' + ((eth?.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (eth?.price_change_percentage_24h || 0).toFixed(2) + '%</span></div>';
+                    document.getElementById('marketList').innerHTML = data.data.slice(0, 8).map(c => '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #21262d;font-size:0.85rem"><span><img src="' + c.image + '" style="width:20px;height:20px;border-radius:50%;vertical-align:middle;margin-right:8px">' + c.name + '</span><span><span style="font-weight:600">$' + (c.current_price || 0).toLocaleString() + '</span> <span class="' + ((c.price_change_percentage_24h || 0) >= 0 ? 'up' : 'down') + '" style="font-size:0.8rem">' + ((c.price_change_percentage_24h || 0) >= 0 ? '+' : '') + (c.price_change_percentage_24h || 0).toFixed(2) + '%</span></span></div>').join('');
                 }
             } catch (e) { console.error('Market error:', e); }
         }
         
         async function loadNews() {
             try {
-                const res = await fetch(API_BASE + '/news/zh?limit=8');
+                const res = await fetch(API_BASE + '/news/zh?limit=10');
                 const data = await res.json();
                 if (data.success && data.data.length > 0) {
-                    document.getElementById('newsContainer').innerHTML = data.data.map(item => '<div class="news-card" onclick="window.location.href=\'/article.html?id=' + encodeURIComponent(item.link) + '\'"><div class="news-meta"><span class="news-source">' + item.source + '</span><span class="news-time">' + formatTime(item.timestamp) + '</span></div><h4><a href="/article.html?id=' + encodeURIComponent(item.link) + '">' + item.title + '</a></h4><p>' + stripHtml(item.content).slice(0, 60) + '...</p></div>').join('');
+                    document.getElementById('newsList').innerHTML = data.data.slice(0, 5).map(n => '<div class="news-card" onclick="window.location.href=\'/article.html?id=' + encodeURIComponent(n.link) + '\'"><div class="news-meta"><span class="news-source">' + n.source + '</span><span class="news-time">' + formatTime(n.timestamp) + '</span></div><div class="news-title"><a href="/article.html?id=' + encodeURIComponent(n.link) + '">' + n.title + '</a></div></div>').join('');
                 }
             } catch (e) { console.error('News error:', e); }
         }
         
-        async function loadDashboard() {
-            try {
-                const res = await fetch(API_BASE + '/features/dashboard?lang=zh');
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('unlockCount').textContent = data.data.unlocks?.length || 0;
-                    document.getElementById('narrativeCount').textContent = data.data.narratives?.length || 0;
-                    document.getElementById('tvlValue').textContent = data.data.marketStats?.defiTvl || '-';
-                    document.getElementById('whaleCount').textContent = '5';
-                }
-            } catch (e) { console.error('Dashboard error:', e); }
+        function loadWhaleAlerts() {
+            const alerts = [
+                { address: 'CZ', token: 'BTC', value: 2500, value_usd: 187500000, action: 'sent', importance: 'critical', time: '30分钟前' },
+                { address: 'Vitalik', token: 'ETH', value: 5000, value_usd: 11300000, action: 'sent', importance: 'high', time: '1小时前' },
+                { address: 'Binance', token: 'USDT', value: 50000000, value_usd: 50000000, action: 'received', importance: 'high', time: '2小时前' },
+                { address: 'Justin Sun', token: 'TRX', value: 10000000, value_usd: 2100000, action: 'sent', importance: 'normal', time: '3小时前' }
+            ];
+            document.getElementById('alertList').innerHTML = alerts.map(a => '<div class="alert-item ' + a.importance + '"><div class="alert-icon">' + (a.action === 'sent' ? '📤' : '📥') + '</div><div class="alert-info"><div class="alert-title">' + a.address + ' 转出 ' + a.token + '</div><div class="alert-detail">' + a.token + ' · ' + a.time + '</div></div><div class="alert-value ' + (a.action === 'sent' ? 'down' : 'up') + '">' + formatLargeNumber(a.value) + '</div><div class="alert-badge ' + a.importance + '">' + (a.importance === 'critical' ? '🔴 重大' : a.importance === 'high' ? '🟠 大额' : '🟡 监控') + '</div></div>').join('');
+        }
+        
+        function loadNarratives() {
+            const narratives = [
+                { name: 'AI + Crypto', icon: '🤖', trend: 'hot', score: 85, articles: 12, sentiment: '📈 正面', desc: 'OpenAI、GPU需求推动' },
+                { name: 'RWA', icon: '📋', trend: 'rising', score: 72, articles: 8, sentiment: '📈 正面', desc: '贝莱德、瑞银等机构入场' },
+                { name: 'DeFi', icon: '💰', trend: 'stable', score: 55, articles: 15, sentiment: '⚖️ 中性', desc: 'TVL 稳定在 $50B' },
+                { name: 'Layer 2', icon: '🔷', trend: 'cooling', score: 40, articles: 10, sentiment: '📉 偏负面', desc: 'Gas费下降，交易量减少' },
+                { name: 'Memecoin', icon: '🐕', trend: 'hot', score: 78, articles: 20, sentiment: '📈 正面', desc: 'PEPE、DOGE 热度上升' },
+                { name: 'Restaking', icon: '🔒', trend: 'rising', score: 65, articles: 6, sentiment: '📈 正面', desc: 'Eigenlayer 推动生态发展' }
+            ];
+            document.getElementById('narrativeInsight').innerHTML = '<div class="why-item">🔥 AI + Crypto、Memecoin 热度上升，可适当关注</div><div class="why-item">📉 Layer 2 概念降温，谨慎追高</div>';
+            document.getElementById('narrativeGrid').innerHTML = narratives.map(n => '<div class="narrative-card ' + n.trend + '"><div class="n-card-header"><span class="n-icon">' + n.icon + '</span><span class="n-name">' + n.name + '</span><span class="n-trend ' + n.trend + '">' + (n.trend === 'hot' ? '🔥 热门' : n.trend === 'rising' ? '📈 上升' : n.trend === 'cooling' ? '📉 降温' : '➡️ 稳定') + '</span></div><div class="n-desc">' + n.desc + '</div><div class="n-stats"><span>热度 ' + n.score + '</span><span>' + n.articles + ' 篇报道</span><span>' + n.sentiment + '</span></div></div>').join('');
+        }
+        
+        function updateFollowedCoins() {
+            document.querySelectorAll('.coin-tag').forEach(tag => {
+                const coin = tag.textContent;
+                tag.classList.toggle('selected', followedCoins.includes(coin));
+            });
+            loadPersonalizedFeed();
+        }
+        
+        function toggleCoin(el, coin) {
+            if (followedCoins.includes(coin)) {
+                followedCoins = followedCoins.filter(c => c !== coin);
+            } else if (followedCoins.length < 5) {
+                followedCoins.push(coin);
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(followedCoins));
+            updateFollowedCoins();
+        }
+        
+        function loadPersonalizedFeed() {
+            if (followedCoins.length === 0) {
+                document.getElementById('feedNews').innerHTML = '<div class="feed-empty"><div class="icon">📰</div><div>请至少关注一个币种</div></div>';
+                document.getElementById('feedWhale').innerHTML = '<div class="feed-empty"><div class="icon">🐋</div><div>请至少关注一个币种</div></div>';
+                return;
+            }
+            document.getElementById('feedNews').innerHTML = '<div class="loading">加载' + followedCoins.join(', ') + '相关内容...</div>';
+            document.getElementById('feedWhale').innerHTML = '<div class="loading">加载中...</div>';
         }
         
         function formatTime(ts) { const d = (Date.now() - ts) / 1000 / 60; if (d < 60) return Math.floor(d) + '分钟前'; if (d < 1440) return Math.floor(d / 60) + '小时前'; return Math.floor(d / 1440) + '天前'; }
-        function stripHtml(h) { return h?.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim() || ''; }
-        async function askAI() { const q = document.getElementById('aiInput').value.trim(); if (!q) return; alert('AI功能演示: ' + q); document.getElementById('aiInput').value = ''; }
+        function formatLargeNumber(n) { if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M'; if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'K'; return '$' + n; }
         
-        // 初始化
-        updateSignal();
-        loadMarket();
-        loadNews();
-        loadDashboard();
+        init();
     </script>
 </body>
 </html>
