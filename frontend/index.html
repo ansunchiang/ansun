@@ -75,20 +75,25 @@
         .alert-badge.critical { background: rgba(248, 81, 73, 0.2); color: #f85149; }
         .alert-badge.high { background: rgba(210, 153, 34, 0.2); color: #d29922; }
         .narrative-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .narrative-card { background: #21262d; border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
-        .narrative-card:hover { border-color: #58a6ff; }
-        .narrative-card.hot { border-color: #f85149; }
-        .narrative-card.rising { border-color: #d29922; }
-        .n-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .n-icon { font-size: 1.5rem; }
+        .narrative-card { background: #21262d; border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; border: 1px solid #30363d; }
+        .narrative-card:hover { border-color: #58a6ff; background: #30363d; }
+        .n-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .n-icon { font-size: 1.3rem; }
         .n-name { font-weight: 600; font-size: 0.95rem; }
+        .n-desc { font-size: 0.8rem; color: #8b949e; line-height: 1.4; }
         .n-trend { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; margin-left: auto; }
         .n-trend.hot { background: rgba(248, 81, 73, 0.2); color: #f85149; }
         .n-trend.rising { background: rgba(210, 153, 34, 0.2); color: #d29922; }
         .n-trend.stable { background: rgba(139, 148, 158, 0.2); color: #8b949e; }
         .n-trend.cooling { background: rgba(88, 166, 255, 0.2); color: #58a6ff; }
-        .n-desc { font-size: 0.8rem; color: #8b949e; margin-bottom: 8px; }
         .n-stats { display: flex; gap: 12px; font-size: 0.75rem; color: #8b949e; }
+        .n-insight-box { background: linear-gradient(135deg, #21262d, #161b22); border: 1px solid #30363d; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+        .n-insight-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; color: #58a6ff; }
+        .n-insight-item { padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.85rem; }
+        .n-insight-item.good { background: rgba(63, 185, 80, 0.1); color: #3fb950; }
+        .n-insight-item.bad { background: rgba(248, 81, 73, 0.1); color: #f85149; }
+        .n-bar-bg { background: #161b22; border-radius: 4px; height: 8px; margin: 10px 0 6px; overflow: hidden; }
+        .n-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
         .feed-settings { background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
         .feed-coins { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
         .coin-tag { padding: 6px 12px; border-radius: 20px; border: 1px solid #30363d; background: #161b22; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
@@ -165,8 +170,12 @@
         <div id="tab-narratives" class="tab-content">
             <div class="section-card">
                 <div class="section-title">🔥 概念轮动分析</div>
-                <div class="why-box" style="margin-bottom:12px"><div class="why-title">💡 AI洞察</div><div id="narrativeInsight">加载中...</div></div>
-                <div class="narrative-grid" id="narrativeGrid"><div class="loading">加载中...</div></div>
+                <div class="n-insight-box">
+                    <div class="n-insight-title">💡 AI 操作建议</div>
+                    <div id="narrativeInsight" style="font-size:0.85rem;color:#8b949e">加载中...</div>
+                </div>
+                <div class="section-title" style="font-size:0.9rem;margin-bottom:12px">📊 概念热度榜</div>
+                <div id="narrativeGrid"><div class="loading">加载中...</div></div>
             </div>
         </div>
         
@@ -292,15 +301,57 @@
         
         function loadNarratives() {
             const narratives = [
-                { name: 'AI + Crypto', icon: '🤖', trend: 'hot', score: 85, articles: 12, sentiment: '📈 正面', desc: 'OpenAI、GPU需求推动' },
-                { name: 'RWA', icon: '📋', trend: 'rising', score: 72, articles: 8, sentiment: '📈 正面', desc: '贝莱德、瑞银等机构入场' },
-                { name: 'DeFi', icon: '💰', trend: 'stable', score: 55, articles: 15, sentiment: '⚖️ 中性', desc: 'TVL 稳定在 $50B' },
-                { name: 'Layer 2', icon: '🔷', trend: 'cooling', score: 40, articles: 10, sentiment: '📉 偏负面', desc: 'Gas费下降，交易量减少' },
-                { name: 'Memecoin', icon: '🐕', trend: 'hot', score: 78, articles: 20, sentiment: '📈 正面', desc: 'PEPE、DOGE 热度上升' },
-                { name: 'Restaking', icon: '🔒', trend: 'rising', score: 65, articles: 6, sentiment: '📈 正面', desc: 'Eigenlayer 推动生态发展' }
+                { name: 'AI + Crypto', icon: '🤖', trend: 'up', trendScore: 15, score: 85, reason: 'OpenAI、GPU需求大涨', action: '可追涨' },
+                { name: 'Memecoin', icon: '🐕', trend: 'up', trendScore: 12, score: 78, reason: 'PEPE、DOGE 社区热度高', action: '轻仓参与' },
+                { name: 'RWA', icon: '📋', trend: 'up', trendScore: 8, score: 72, reason: '贝莱德等机构持续入场', action: '逢低布局' },
+                { name: 'Restaking', icon: '🔒', trend: 'up', trendScore: 5, score: 65, reason: 'Eigenlayer 推动生态', action: '持有' },
+                { name: 'DeFi', icon: '💰', trend: 'stable', trendScore: 0, score: 55, reason: 'TVL 稳定在 $50B', action: '持有观望' },
+                { name: 'Layer 2', icon: '🔷', trend: 'down', trendScore: -10, score: 40, reason: 'Gas下降、交易量减少', action: '回避' },
+                { name: 'Gaming', icon: '🎮', trend: 'down', trendScore: -5, score: 35, reason: '新游戏上线少', action: '观望' }
             ];
-            document.getElementById('narrativeInsight').innerHTML = '<div class="why-item">🔥 AI + Crypto、Memecoin 热度上升，可适当关注</div><div class="why-item">📉 Layer 2 概念降温，谨慎追高</div>';
-            document.getElementById('narrativeGrid').innerHTML = narratives.map(n => '<div class="narrative-card ' + n.trend + '"><div class="n-card-header"><span class="n-icon">' + n.icon + '</span><span class="n-name">' + n.name + '</span><span class="n-trend ' + n.trend + '">' + (n.trend === 'hot' ? '🔥 热门' : n.trend === 'rising' ? '📈 上升' : n.trend === 'cooling' ? '📉 降温' : '➡️ 稳定') + '</span></div><div class="n-desc">' + n.desc + '</div><div class="n-stats"><span>热度 ' + n.score + '</span><span>' + n.articles + ' 篇报道</span><span>' + n.sentiment + '</span></div></div>').join('');
+            
+            // 按热度排序
+            narratives.sort((a, b) => b.score - a.score);
+            
+            // AI建议
+            const hot = narratives.filter(n => n.trend === 'up' && n.score > 60);
+            const cold = narratives.filter(n => n.trend === 'down' || n.score < 40);
+            
+            let insight = '';
+            if (hot.length > 0) {
+                insight += '<div style="color:#3fb950;margin-bottom:8px">🟢 可关注: ' + hot.map(n => n.name).join('、') + '</div>';
+            }
+            if (cold.length > 0) {
+                insight += '<div style="color:#f85149">🔴 回避: ' + cold.map(n => n.name).join('、') + '</div>';
+            }
+            document.getElementById('narrativeInsight').innerHTML = insight;
+            
+            // 概念卡片
+            let html = '';
+            narratives.forEach(n => {
+                const trendIcon = n.trend === 'up' ? '📈' : n.trend === 'down' ? '📉' : '➡️';
+                const trendText = n.trend === 'up' ? '上升中' : n.trend === 'down' ? '降温中' : '平稳';
+                const actionColor = n.action.includes('追') || n.action.includes('布局') ? '#3fb950' : n.action.includes('回避') ? '#f85149' : '#8b949e';
+                const barWidth = Math.min(n.score, 100);
+                const barColor = n.score > 70 ? '#f85149' : n.score > 50 ? '#d29922' : '#58a6ff';
+                
+                html += '<div class="narrative-card">';
+                html += '<div class="n-header">';
+                html += '<span class="n-icon">' + n.icon + '</span>';
+                html += '<span class="n-name">' + n.name + '</span>';
+                html += '<span style="margin-left:auto;font-size:0.8rem;color:' + actionColor + '">' + n.action + '</span>';
+                html += '</div>';
+                html += '<div style="font-size:0.75rem;color:#8b949e;margin-bottom:8px">' + trendIcon + ' ' + trendText + ' · ' + n.reason + '</div>';
+                html += '<div style="background:#161b22;border-radius:4px;height:6px;margin-bottom:4px">';
+                html += '<div style="background:' + barColor + ';width:' + barWidth + '%;height:100%;border-radius:4px;transition:width 0.3s"></div>';
+                html += '</div>';
+                html += '<div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#8b949e">';
+                html += '<span>热度 ' + n.score + '</span>';
+                html += '<span>' + (n.score > 70 ? '🔥 热门' : n.score > 50 ? '📊 关注' : '📉 冷门') + '</span>';
+                html += '</div>';
+                html += '</div>';
+            });
+            document.getElementById('narrativeGrid').innerHTML = html;
         }
         
         function updateFollowedCoins() {
