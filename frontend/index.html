@@ -34,15 +34,29 @@
         .signal-reason { background:#161b22;border-radius:6px;padding:10px;font-size:0.85rem;color:#8b949e;line-height:1.5 }
         .signal-reason strong { color:#c9d1d9 }
         
-        /* Narrative Cards */
-        .narrative-item { display:flex;align-items:center;gap:12px;padding:12px;background:#21262d;border-radius:10px;margin-bottom:8px }
-        .narrative-rank { font-size:0.8rem;font-weight:700;color:#58a6ff;min-width:24px }
-        .narrative-icon { font-size:1.3rem }
-        .narrative-name { font-weight:600;flex:1 }
-        .narrative-trend { font-size:0.75rem;padding:2px 8px;border-radius:10px }
-        .narrative-trend.hot { background:rgba(248,81,73,0.2);color:#f85149 }
-        .narrative-trend.up { background:rgba(63,185,80,0.2);color:#3fb950 }
-        .narrative-trend.down { background:rgba(88,166,255,0.2);color:#58a6ff }
+        /* Narrative Cards - Detailed */
+        .narrative-card { background:#21262d;border-radius:12px;padding:14px;margin-bottom:10px }
+        .narrative-header { display:flex;align-items:center;gap:10px;margin-bottom:10px }
+        .narrative-rank { background:#30363d;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;color:#58a6ff }
+        .narrative-icon { font-size:1.4rem }
+        .narrative-name { font-size:1rem;font-weight:700 }
+        .narrative-score { margin-left:auto;font-size:0.8rem;color:#8b949e }
+        
+        .narrative-tip { display:inline-block;padding:4px 10px;border-radius:12px;font-size:0.8rem;font-weight:600;margin-bottom:10px }
+        .narrative-tip.buy { background:rgba(63,185,80,0.2);color:#3fb950 }
+        .narrative-tip.hold { background:rgba(210,153,34,0.2);color:#d29922 }
+        .narrative-tip.sell { background:rgba(248,81,73,0.2);color:#f85149 }
+        
+        .narrative-desc { font-size:0.8rem;color:#8b949e;line-height:1.5;margin-bottom:10px }
+        .narrative-coins { font-size:0.8rem }
+        .narrative-coins strong { color:#c9d1d9 }
+        
+        .narrative-bar { background:#161b22;border-radius:4px;height:6px;margin-top:10px;overflow:hidden }
+        .narrative-bar-fill { height:100%;border-radius:4px;transition:width 0.3s }
+        .narrative-bar-fill.hot { background:#f85149 }
+        .narrative-bar-fill.up { background:#3fb950 }
+        .narrative-bar-fill.stable { background:#58a6ff }
+        .narrative-bar-fill.down { background:#8b949e }
         
         /* Whale Cards */
         .whale-card { background:#21262d;border-radius:10px;padding:12px;margin-bottom:8px }
@@ -78,7 +92,7 @@
         
         <!-- Narratives -->
         <div class="section">
-            <div class="section-title">🔥 热门概念</div>
+            <div class="section-title">🔥 热门概念 · 把握市场热点</div>
             <div id="narrativeList"><div class="loading">加载中...</div></div>
         </div>
         
@@ -104,13 +118,74 @@
             { symbol: 'DOGE/USDT', action: 'buy', target: '$0.15', confidence: 65, reason: '社区热度上升，<strong>Memecoin</strong> 叙事回归' }
         ];
         
-        // 概念数据
+        // 概念数据 - 详细版
         const narratives = [
-            { rank: 1, name: 'AI + Crypto', icon: '🤖', trend: 'hot', score: 85 },
-            { rank: 2, name: 'RWA', icon: '📋', trend: 'up', score: 72 },
-            { rank: 3, name: 'Memecoin', icon: '🐕', trend: 'up', score: 68 },
-            { rank: 4, name: 'Restaking', icon: '🔒', trend: 'up', score: 60 },
-            { rank: 5, name: 'DeFi', icon: '💰', trend: 'stable', score: 52 }
+            { 
+                rank: 1, 
+                name: 'AI + Crypto', 
+                icon: '🤖', 
+                trend: 'hot', 
+                score: 85,
+                tip: '🟢 可追涨',
+                tipClass: 'buy',
+                desc: 'OpenAI、GPU 需求大涨，AI 叙事持续发酵。机构资金持续流入，看好中长期表现。',
+                coins: '相关币: FET, OCW, GRAI, AKT, RNDR'
+            },
+            { 
+                rank: 2, 
+                name: 'RWA', 
+                icon: '📋', 
+                trend: 'up', 
+                score: 72,
+                tip: '🟡 逢低布局',
+                tipClass: 'hold',
+                desc: '贝莱德、富兰克林等传统机构持续入场。美国国债代币化产品需求旺盛。',
+                coins: '相关币: ONDO, MOMO, GYEN, USTB'
+            },
+            { 
+                rank: 3, 
+                name: 'Memecoin', 
+                icon: '🐕', 
+                trend: 'up', 
+                score: 68,
+                tip: '🟡 轻仓参与',
+                tipClass: 'hold',
+                desc: 'PEPE、DOGE 社区热度回升。meme 周期来临，适合高风险偏好者。',
+                coins: '相关币: PEPE, DOGE, FLOKI, WIF, BONK'
+            },
+            { 
+                rank: 4, 
+                name: 'Restaking', 
+                icon: '🔒', 
+                trend: 'stable', 
+                score: 60,
+                tip: '🟢 持有',
+                tipClass: 'buy',
+                desc: 'Eigenlayer 带动 Restaking 生态发展。ETH 质押率提升，收益可观。',
+                coins: '相关币: EIGEN, ETHFI, SD, PUFFER'
+            },
+            { 
+                rank: 5, 
+                name: 'DeFi', 
+                icon: '💰', 
+                trend: 'stable', 
+                score: 52,
+                tip: '⚪ 观望',
+                tipClass: 'hold',
+                desc: 'TVL 稳定在 $50B 左右。创新项目减少，等待新叙事发令枪。',
+                coins: '相关币: UNI, AAVE, COMP, MKR, SNX'
+            },
+            { 
+                rank: 6, 
+                name: 'Layer 2', 
+                icon: '🔷', 
+                trend: 'down', 
+                score: 40,
+                tip: '🔴 回避',
+                tipClass: 'sell',
+                desc: 'Gas 费创新低，交易量萎缩。Arbitrum、OP 空投预期结束，热度消退。',
+                coins: '相关币: ARB, OP, MATIC, METIS'
+            }
         ];
         
         // 巨鲸数据
@@ -137,14 +212,28 @@
         }
         
         function renderNarratives() {
-            const list = narratives.map(n => `
-                <div class="narrative-item">
-                    <span class="narrative-rank">${n.rank}</span>
-                    <span class="narrative-icon">${n.icon}</span>
-                    <span class="narrative-name">${n.name}</span>
-                    <span class="narrative-trend ${n.trend}">${n.trend === 'hot' ? '🔥' : n.trend === 'up' ? '📈' : '➡️'} ${n.score}%</span>
+            const list = narratives.map(n => {
+                const barWidth = Math.min(n.score, 100);
+                const barColor = n.score > 70 ? '#f85149' : n.score > 50 ? '#d29922' : '#58a6ff';
+                const tipText = n.tipClass === 'buy' ? '可追涨' : n.tipClass === 'sell' ? '回避' : n.tip.includes('轻仓') ? '轻仓' : '持有/观望';
+                
+                return `
+                <div class="narrative-card">
+                    <div class="narrative-header">
+                        <span class="narrative-rank">${n.rank}</span>
+                        <span class="narrative-icon">${n.icon}</span>
+                        <span class="narrative-name">${n.name}</span>
+                        <span class="narrative-score">${n.score}%</span>
+                    </div>
+                    <span class="narrative-tip ${n.tipClass}">${tipText}</span>
+                    <div class="narrative-desc">${n.desc}</div>
+                    <div class="narrative-coins"><strong>📌</strong> ${n.coins}</div>
+                    <div class="narrative-bar">
+                        <div class="narrative-bar-fill" style="width:${barWidth}%;background:${barColor}"></div>
+                    </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
             document.getElementById('narrativeList').innerHTML = list;
         }
         
