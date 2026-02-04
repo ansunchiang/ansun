@@ -117,10 +117,10 @@
         </header>
         
         <div class="tab-nav">
-            <button class="tab-btn active" onclick="showTab('signal')">📈 AI信号</button>
-            <button class="tab-btn" onclick="showTab('whale')">🐋 巨鲸追踪</button>
-            <button class="tab-btn" onclick="showTab('narratives')">🔥 概念轮动</button>
-            <button class="tab-btn" onclick="showTab('feed')">⭐ 我的关注</button>
+            <button class="tab-btn active" onclick="showTab('signal', this)">📈 AI信号</button>
+            <button class="tab-btn" onclick="showTab('whale', this)">🐋 巨鲸追踪</button>
+            <button class="tab-btn" onclick="showTab('narratives', this)">🔥 概念轮动</button>
+            <button class="tab-btn" onclick="showTab('feed', this)">⭐ 我的关注</button>
         </div>
         
         <div id="tab-signal" class="tab-content active">
@@ -142,10 +142,10 @@
             </div>
             
             <div class="quick-stats">
-                <div class="quick-stat"><div class="icon">🔔</div><div class="label">代币解锁</div><div class="value" id="unlockCount">-</div><div class="sub">本月</div></div>
-                <div class="quick-stat"><div class="icon">📰</div><div class="label">最新资讯</div><div class="value" id="newsCount">-</div><div class="sub">实时</div></div>
-                <div class="quick-stat"><div class="icon">🐋</div><div class="label">巨鲸追踪</div><div class="value" id="whaleAlertCount">-</div><div class="sub">活跃</div></div>
-                <div class="quick-stat"><div class="icon">📊</div><div class="label">DeFi TVL</div><div class="value" id="tvlValue">-</div><div class="sub">链上</div></div>
+                <div class="quick-stat" onclick="jumpTo('signal')"><div class="icon">🔔</div><div class="label">代币解锁</div><div class="value" id="unlockCount">-</div><div class="sub">本月</div></div>
+                <div class="quick-stat" onclick="jumpTo('signal')"><div class="icon">📰</div><div class="label">最新资讯</div><div class="value" id="newsCount">-</div><div class="sub">实时</div></div>
+                <div class="quick-stat" onclick="jumpTo('whale')"><div class="icon">🐋</div><div class="label">巨鲸追踪</div><div class="value" id="whaleAlertCount">-</div><div class="sub">活跃</div></div>
+                <div class="quick-stat" onclick="jumpTo('narratives')"><div class="icon">📊</div><div class="label">概念轮动</div><div class="value" id="tvlValue">-</div><div class="sub">热度</div></div>
             </div>
             
             <div class="section-card">
@@ -239,11 +239,26 @@
             updateFollowedCoins();
         }
         
-        function showTab(tab) {
+        function showTab(tab, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('tab-' + tab).classList.add('active');
-            event.target.classList.add('active');
+            if (btn) {
+                btn.classList.add('active');
+            } else {
+                // Find and activate the button for this tab
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(b => {
+                    if (b.textContent.toLowerCase().includes(tab === 'signal' ? 'ai' : tab)) {
+                        b.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        function jumpTo(tab) {
+            showTab(tab);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function updateSignal() {
